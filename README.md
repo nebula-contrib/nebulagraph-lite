@@ -36,3 +36,9 @@ Play with `nebula3-python` or [ipython-ngql](https://github.com/wey-gu/ipython-n
 pip3 install ipython-ngql
 %load_ext ngql
 ```
+
+## Acknowledgements
+
+- udocker, https://github.com/indigo-dc/udocker
+- docker-in-colab, https://github.com/drengskapur/docker-in-colab
+- NebulaGraph Docker, https://github.com/vesoft-inc/nebula-docker-compose
