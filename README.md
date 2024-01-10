@@ -26,10 +26,13 @@ n = ng_let()
 n.start()
 ```
 
+Voilà! It'ts up and running already now!
+
 ## What's next
 
-Play with `nebula3-python` or [ipython-ngql](https://github.com/wey-gu/ipython-ngql).
+Play with `nebula3-python` or [ipython-ngql](https://github.com/wey-gu/ipython-ngql) and walk through the [Documentation](https://docs.nebula-graph.io/)!
 
 ```bash
 pip3 install ipython-ngql
+%load_ext ngql
 ```
