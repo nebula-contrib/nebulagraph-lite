@@ -128,7 +128,7 @@ class nebulagraph_let:
         result = get_ipython().system(f'su - user -c "udocker {command}"')
         return result
 
-    @retry((Exception,), tries=5, delay=5, backoff=3)
+    @retry((Exception,), tries=3, delay=5, backoff=3)
     def _run_udocker(self, command: str):
         if self.on_colab:
             return self._run_udocker_on_colab(command)
@@ -160,7 +160,13 @@ class nebulagraph_let:
     def _run_udocker_background_on_colab(self, command: str):
         from IPython import get_ipython
 
-        get_ipython().system(f'su - user -c "udocker {command} " &')
+        if not self._debug:
+            redirect_clause = "> /dev/null 2>&1"
+        else:
+            redirect_clause = ""
+        get_ipython().system(
+            f'nohup su - user -c "udocker {command}" {redirect_clause} &'
+        )
 
     def _run_udocker_background(self, command: str):
         if self.on_colab:
@@ -239,7 +245,6 @@ class nebulagraph_let:
 
     def start(self):
         self.udocker_init()
-        os.chdir(self.base_path)
         self.start_metad()
         self.start_graphd()
         self.start_storaged()
@@ -247,6 +252,7 @@ class nebulagraph_let:
         self.activate_storaged()
 
         print("nebulagraph_lite started successfully!")
+        self.docker_ps()
 
     def check_status(self):
         self._run_udocker_ps_filter("metad")
