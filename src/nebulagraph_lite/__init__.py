@@ -5,8 +5,9 @@ import functools
 from typing import List, Type
 
 LOCALHOST_V4 = "127.0.0.1"
-DEFAULT_GRAPHD_PORT = 39669
+DEFAULT_GRAPHD_PORT = 9669
 BASE_PATH = os.path.expanduser("~/.nebulagraph/lite")
+COLAB_BASE_PATH = "/content/.nebulagraph/lite"
 
 
 def retry(
@@ -63,7 +64,25 @@ class nebulagraph_let:
         self._python_bin_path = os.path.dirname(os.sys.executable)
         self._debug = debug
 
+        self.on_colab = self._is_running_on_colab()
+        if self.on_colab:
+            self.base_path = COLAB_BASE_PATH
+
         self.create_nebulagraph_lite_folders()
+
+    def _is_running_on_colab(self):
+        try:
+            from IPython import get_ipython
+
+            if "google.colab" in str(get_ipython()):
+                print("Detected that we are running on Google Colab!")
+                # Thanks to https://github.com/drengskapur/docker-in-colab by drengskapur
+                get_ipython().system("pip install udocker > /dev/null")
+                get_ipython().system("udocker --allow-root install > /dev/null")
+                get_ipython().system("useradd -m user > /dev/null")
+                return True
+        except:
+            return False
 
     def clean_up_base_path(self):
         if self.base_path == "/":
@@ -91,6 +110,10 @@ class nebulagraph_let:
                 os.path.join(self.base_path, "logs/storage0"), exist_ok=True
             )
             os.makedirs(os.path.join(self.base_path, "logs/graph"), exist_ok=True)
+            from IPython import get_ipython
+
+            get_ipython().system(f"chown -R user:user {self.base_path}")
+
         except Exception as e:
             print(e)
             raise Exception(
@@ -99,8 +122,16 @@ class nebulagraph_let:
                 f"{self.base_path}"
             )
 
-    @retry((Exception,), tries=5, delay=5, backoff=3)
+    def _run_udocker_on_colab(self, command: str):
+        from IPython import get_ipython
+
+        result = get_ipython().system(f'su - user -c "udocker {command}"')
+        return result
+
+    @retry((Exception,), tries=3, delay=5, backoff=3)
     def _run_udocker(self, command: str):
+        if self.on_colab:
+            return self._run_udocker_on_colab(command)
         udocker_command_prefix = os.path.join(self._python_bin_path, "udocker")
         udocker_command = f"{udocker_command_prefix} {command}"
         result = subprocess.run(
@@ -126,7 +157,22 @@ class nebulagraph_let:
     def _run_udocker_ps_filter(self, filter: str):
         self._run_udocker(f"ps | grep {filter}")
 
+    def _run_udocker_background_on_colab(self, command: str):
+        from IPython import get_ipython
+
+        if not self._debug:
+            redirect_clause = "> /dev/null 2>&1"
+        else:
+            redirect_clause = ""
+        get_ipython().system(
+            f'nohup su - user -c "udocker {command}" {redirect_clause} &'
+        )
+
     def _run_udocker_background(self, command: str):
+        if self.on_colab:
+            self._run_udocker_background_on_colab(command)
+            return
+
         udocker_command_prefix = os.path.join(self._python_bin_path, "udocker")
         udocker_command = f"{udocker_command_prefix} {command} &"
         subprocess.Popen(
@@ -152,7 +198,8 @@ class nebulagraph_let:
             print("starting metad... with command:" f"\n{udocker_command}")
         self._run_udocker_background(udocker_command)
         time.sleep(10)
-        self._run_udocker_ps_filter("metad")
+        if not self.on_colab:
+            self._run_udocker_ps_filter("metad")
 
     def start_graphd(self):
         udocker_command = (
@@ -166,7 +213,8 @@ class nebulagraph_let:
             print("starting graphd... with command:" f"\n{udocker_command}")
         self._run_udocker_background(udocker_command)
         time.sleep(10)
-        self._run_udocker_ps_filter("graphd")
+        if not self.on_colab:
+            self._run_udocker_ps_filter("graphd")
 
     def activate_storaged(self):
         udocker_command = (
@@ -192,11 +240,11 @@ class nebulagraph_let:
 
         self._run_udocker_background(udocker_command)
         time.sleep(20)
-        self._run_udocker_ps_filter("storaged")
+        if not self.on_colab:
+            self._run_udocker_ps_filter("storaged")
 
     def start(self):
         self.udocker_init()
-        os.chdir(self.base_path)
         self.start_metad()
         self.start_graphd()
         self.start_storaged()
@@ -204,6 +252,7 @@ class nebulagraph_let:
         self.activate_storaged()
 
         print("nebulagraph_lite started successfully!")
+        self.docker_ps()
 
     def check_status(self):
         self._run_udocker_ps_filter("metad")
