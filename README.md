@@ -38,6 +38,18 @@ pip3 install ipython-ngql
 %load_ext ngql
 ```
 
+And we could access it like:
+
+```python
+%ngql --address 127.0.0.1 --port 9669 --user root --password nebula
+```
+
+And query like:
+
+```python
+%ngql SHOW HOSTS;
+```
+
 ## Acknowledgements
 
 - udocker, https://github.com/indigo-dc/udocker
