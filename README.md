@@ -50,6 +50,23 @@ And query like:
 %ngql SHOW HOSTS;
 ```
 
+## Other non-lite or less-lite options
+
+Intrested in other play or production options?
+
+### Production
+
+- [Binary Packages](https://www.nebula-graph.io/download), if running on bare OS.
+- [K8s Operator](https://github.com/vesoft-inc/nebula-operator), on K8s.
+- [NebulaGrpah Cloud](https://www.nebula-graph.io/cloud), the managed NebulaGraph service.
+
+### Play and Dev
+
+- [Docker Compose](https://github.com/vesoft-inc/nebula-docker-compose), if you are comfortable on single server
+- [nebula-up](https://github.com/wey-gu/nebula-up), one-liner test env installer on single server, support studio, dashboard, nebulagraph algorithm, exchange etc, all-in-one.
+- [Docker Extension](https://github.com/nebula-contrib/nebulagraph-docker-ext), one-click on Docker Desktop(macOS, windows) on desktop machines, in GUI flavor.
+- [Nebula-Operator-KinD](https://github.com/wey-gu/nebula-operator-kind), Nebula K8s Operator with K8s-in-Docker, one-liner test env with docker+k8s+nebulagrpah-operator, try NebulaGraph on K8s with ease on your single server.
+
 ## Acknowledgements
 
 - udocker, https://github.com/indigo-dc/udocker
