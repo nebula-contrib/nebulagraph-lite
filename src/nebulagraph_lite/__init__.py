@@ -52,7 +52,11 @@ class nebulagraph_let:
         port: int = DEFAULT_GRAPHD_PORT,
         base_path: str = BASE_PATH,
         debug=False,
+        clean_up=False,
     ):
+        if clean_up:
+            self.clean_up_base_path()
+
         self.host = host
         self.port = port
         self.base_path = base_path
