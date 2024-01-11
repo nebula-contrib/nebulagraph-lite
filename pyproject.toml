@@ -1,6 +1,6 @@
 [project]
 name = "nebulagraph-lite"
-version = "0.0.3"
+version = "0.0.4"
 description = "Plug and play NebulaGraph with pip install."
 authors = [
     {name = "Wey Gu",email = "weyl.gu@gmail.com"},
