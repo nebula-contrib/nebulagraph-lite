@@ -110,9 +110,11 @@ class nebulagraph_let:
                 os.path.join(self.base_path, "logs/storage0"), exist_ok=True
             )
             os.makedirs(os.path.join(self.base_path, "logs/graph"), exist_ok=True)
-            from IPython import get_ipython
 
-            get_ipython().system(f"chown -R user:user {self.base_path}")
+            if self.on_colab:
+                from IPython import get_ipython
+
+                get_ipython().system(f"chown -R user:user {self.base_path}")
 
         except Exception as e:
             print(e)
@@ -226,6 +228,15 @@ class nebulagraph_let:
         time.sleep(10)
         # TODO: do 'SHOW HOSTS' to check if storaged is activated
 
+    def load_basketballplayer_dataset(self):
+        udocker_command = (
+            f"run --rm "
+            f"vesoft/nebula-console:v3 "
+            f"-addr {self.host} -port {self.port} -u root -p nebula -e ':play basketballplayer'"
+        )
+        self._run_udocker(udocker_command)
+        time.sleep(10)
+
     def start_storaged(self):
         udocker_command = (
             f"run --rm --user=root -v "
@@ -250,7 +261,9 @@ class nebulagraph_let:
         self.start_storaged()
         time.sleep(10)
         self.activate_storaged()
-
+        time.sleep(20)
+        print("loading basketballplayer dataset...")
+        self.load_basketballplayer_dataset()
         print("nebulagraph_lite started successfully!")
         self.docker_ps()
 
@@ -260,4 +273,18 @@ class nebulagraph_let:
         self._run_udocker_ps_filter("storaged")
 
     def docker_ps(self):
-        self._run_udocker("ps")
+        return self._run_udocker("ps")
+
+    def stop(self):
+        if self.on_colab:
+            self._run_udocker(
+                "ps | grep nebula | awk '{print $1}' | xargs -I {} udocker rm {}"
+            )
+            return
+
+        # in other environments, we cannot assume awk/xargs are installed
+        # let's get the container ids first
+        result = self._run_udocker("ps | grep nebula").stdout.decode()
+        container_ids = [line.split()[0] for line in result.split("\n") if line]
+        if container_ids:
+            self._run_udocker(f"rm {' '.join(container_ids)}")
