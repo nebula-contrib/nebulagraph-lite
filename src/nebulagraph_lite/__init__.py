@@ -61,7 +61,24 @@ class nebulagraph_let:
             os.path.expanduser("~") in self.base_path
         ), "Base path must be under current user's home directory"
 
-        self._python_bin_path = os.path.dirname(os.sys.executable)
+        self.on_ipython = False
+        try:
+            from IPython import get_ipython
+
+            ipython = get_ipython()
+            self.on_ipython = bool(ipython)
+        except:
+            pass
+
+        if self.on_ipython:
+            _path = get_ipython().getoutput("which udocker")
+            assert (
+                _path
+            ), "udocker's path cannot be determined, please specify its base path manually"
+            self._python_bin_path = os.path.dirname(_path[0])
+        else:
+            self._python_bin_path = os.path.dirname(os.sys.executable)
+
         self._debug = debug
 
         self.on_colab = self._is_running_on_colab()
