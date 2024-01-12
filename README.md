@@ -28,6 +28,17 @@ n = ng_let()
 n.start()
 ```
 
+<details>
+  <summary>Or from CLI</summary>
+
+> Start NebulaGraph Lite from CLI:
+
+```bash
+nebulagraph start
+```
+
+</details>
+
 Voilà! It'ts up and running already now!
 
 ## What's next
