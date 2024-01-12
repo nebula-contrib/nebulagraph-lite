@@ -82,6 +82,26 @@ With udocker, the opinionated subset docker running in user space, we could run 
 
 Thus we support running inside docker container, WSL2, Google Colab.
 
+### Can NebulaGraph-Lite run inside a container?
+
+Yes! Say we are in a container that runs Ubuntu, we could run:
+
+```bash
+docker run -it --rm ubuntu:latest bash
+# inside the container
+apt update && apt install python3-pip curl -y
+pip3 install nebulagraph-lite
+python3
+```
+
+In python3:
+
+```python
+from nebulagraph_lite import nebulagraph_let as ng_let
+n = ng_let(in_container=True)
+n.start()
+```
+
 ### Does it support Windows?
 
 Yes, it supports Windows with WSL2 or other Linux VMs with a Hypervisor.

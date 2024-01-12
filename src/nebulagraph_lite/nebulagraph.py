@@ -23,6 +23,7 @@ class NebulaGraphLet:
         base_path: str = BASE_PATH,
         debug=False,
         clean_up=False,
+        in_container=False,
     ):
         if clean_up:
             self.clean_up()
@@ -52,12 +53,28 @@ class NebulaGraphLet:
             self._python_bin_path = os.path.dirname(_path[0])
         else:
             self._python_bin_path = os.path.dirname(os.sys.executable)
+            result = subprocess.run(
+                f"{self._python_bin_path}/udocker --help",
+                shell=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+            )
+            if result.returncode != 0:
+                _path = subprocess.getoutput("which udocker")
+                if _path:
+                    self._python_bin_path = os.path.dirname(_path)
+                else:
+                    raise Exception(
+                        "udocker not found. Please install or link it manually to your PATH."
+                    )
 
         self._debug = debug
 
         self.on_colab = self._is_running_on_colab()
         if self.on_colab:
             self.base_path = COLAB_BASE_PATH
+
+        self.in_container = in_container
 
         self.create_nebulagraph_lite_folders()
 
@@ -137,6 +154,8 @@ class NebulaGraphLet:
         if self.on_colab:
             return self._run_udocker_on_colab(command)
         udocker_command_prefix = os.path.join(self._python_bin_path, "udocker")
+        if self.in_container:
+            udocker_command_prefix = udocker_command_prefix + " --allow-root"
         udocker_command = f"{udocker_command_prefix} {command}"
         result = subprocess.run(
             udocker_command,
@@ -179,6 +198,8 @@ class NebulaGraphLet:
             return
 
         udocker_command_prefix = os.path.join(self._python_bin_path, "udocker")
+        if self.in_container:
+            udocker_command_prefix = udocker_command_prefix + " --allow-root"
         udocker_command = f"{udocker_command_prefix} {command} &"
         subprocess.Popen(
             udocker_command,
@@ -199,7 +220,7 @@ class NebulaGraphLet:
     def _try_shoot_service(self, service: str):
         try:
             self._run_udocker(
-                f"ps | grep {service} | awk '{{print $1}}' | xargs -I {{}} udocker rm {{}}"
+                f"ps | grep {service} | awk '{{print $1}}' | xargs -I {{}} udocker rm -f {{}}"
             )
             os.system(f"killall nebula-{service} > /dev/null 2>&1")
         except Exception as e:
@@ -347,7 +368,7 @@ class NebulaGraphLet:
     def stop(self):
         if self.on_colab:
             self._run_udocker(
-                "ps | grep nebula | awk '{print $1}' | xargs -I {} udocker rm {}"
+                "ps | grep nebula | awk '{print $1}' | xargs -I {} udocker rm -f {}"
             )
             self._try_shoot_all_services()
             return
