@@ -92,7 +92,7 @@ Yes, it supports Windows with WSL2 or other Linux VMs with a Hypervisor.
 
 ```python
 n.stop()
-n.clean_up_base_path()
+n.clean_up()
 ```
 
 - Step 2, pip uninstall nebulagraph-lite and dependencies.
@@ -107,9 +107,12 @@ pip3 uninstall nebulagraph-lite udocker
 rm -rf ~/.udocker
 ```
 
-- Step 4, kill the left processes.
+- Step 4, kill the left processes, in case of any.
 
 ```bash
+ss -plunt | grep "9559\|9669\|9779"
+# if any, kill them with killall or other tools
+
 killall -9 nebula-graphd
 killall -9 nebula-storaged
 killall -9 nebula-metad
