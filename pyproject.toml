@@ -33,3 +33,6 @@ client = [
 
 [tool.pdm.scripts]
 nebulagraph = {call = "nebulagraph_lite.cli:main"}
+
+[project.scripts]
+nebulagraph = "nebulagraph_lite.cli:main"
