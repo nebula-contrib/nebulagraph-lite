@@ -4,7 +4,12 @@ import time
 
 from urllib.request import urlretrieve
 
-from nebulagraph_lite.utils import retry, fancy_print, fancy_dict_print
+from nebulagraph_lite.utils import (
+    retry,
+    fancy_print,
+    fancy_dict_print,
+    BANNER_ASCII,
+)
 
 LOCALHOST_V4 = "127.0.0.1"
 DEFAULT_GRAPHD_PORT = 9669
@@ -25,12 +30,12 @@ class NebulaGraphLet:
         clean_up=False,
         in_container=False,
     ):
+        self.host = host if host is not None else LOCALHOST_V4
+        self.port = port if port is not None else DEFAULT_GRAPHD_PORT
+        self.base_path = base_path if base_path is not None else BASE_PATH
+
         if clean_up:
             self.clean_up()
-
-        self.host = host
-        self.port = port
-        self.base_path = base_path
 
         assert (
             os.path.expanduser("~") in self.base_path
@@ -68,13 +73,13 @@ class NebulaGraphLet:
                         "udocker not found. Please install or link it manually to your PATH."
                     )
 
-        self._debug = debug
+        self._debug = debug if debug is not None else False
 
         self.on_colab = self._is_running_on_colab()
         if self.on_colab:
             self.base_path = COLAB_BASE_PATH
 
-        self.in_container = in_container
+        self.in_container = in_container if in_container is not None else False
 
         self.create_nebulagraph_lite_folders()
 
@@ -175,7 +180,9 @@ class NebulaGraphLet:
                 f"udocker command failed with return code {result.returncode}"
             )
         if output and self._debug:
-            fancy_print(f"[INFO] [DEBUG] udocker command output: {output.decode()}")
+            fancy_print(
+                f"[INFO] [DEBUG] udocker command output:\n{output.decode()}"
+            )
         return result
 
     def _run_udocker_ps_filter(self, filter: str):
@@ -354,7 +361,8 @@ class NebulaGraphLet:
         time.sleep(20)
         fancy_print("[INFO] loading basketballplayer dataset...")
         self.load_basketballplayer_dataset()
-        fancy_print("[ OK ] nebulagraph_lite started successfully!")
+        fancy_print(BANNER_ASCII)
+        fancy_print("[ OK ] nebulagraph_lite started successfully!", "purple")
         self.docker_ps()
 
     def check_status(self):

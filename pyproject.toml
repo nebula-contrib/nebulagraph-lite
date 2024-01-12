@@ -1,6 +1,6 @@
 [project]
 name = "nebulagraph-lite"
-version = "0.0.8"
+dynamic = ["version"]
 description = "Plug and play NebulaGraph with pip install."
 authors = [
     {name = "Wey Gu",email = "weyl.gu@gmail.com"},
@@ -16,6 +16,20 @@ license = {text = "Apache 2.0"}
 requires = ["pdm-backend"]
 build-backend = "pdm.backend"
 
+[tool.pdm.version]
+source = "file"
+path = "src/nebulagraph_lite/__init__.py"
 
 [tool.pdm]
-package-type = "library"
+package-type = "application"
+
+[tool.pdm.dev-dependencies]
+jupyter = [
+    "ipython-ngql>=0.7.5",
+]
+client = [
+    "nebula3-python>=3.4.0",
+]
+
+[tool.pdm.scripts]
+nebulagraph = {call = "nebulagraph_lite.cli:main"}
