@@ -73,3 +73,44 @@ Intrested in other play or production options?
 - udocker, https://github.com/indigo-dc/udocker
 - docker-in-colab, https://github.com/drengskapur/docker-in-colab
 - NebulaGraph Docker, https://github.com/vesoft-inc/nebula-docker-compose
+
+## FAQ
+
+### Why not docker?
+
+With udocker, the opinionated subset docker running in user space, we could run docker images without root privilege, docker daemon.
+
+Thus we support running inside docker container, WSL2, Google Colab.
+
+### Does it support Windows?
+
+Yes, it supports Windows with WSL2 or other Linux VMs with a Hypervisor.
+
+### How to clean up?
+
+- Step 1, from nebulagraph-lite, remove the udocker container and clean up the base path.
+
+```python
+n.stop()
+n.clean_up_base_path()
+```
+
+- Step 2, pip uninstall nebulagraph-lite and dependencies.
+
+```bash
+pip3 uninstall nebulagraph-lite udocker
+```
+
+- Step 3, remove the udocker files.
+
+```bash
+rm -rf ~/.udocker
+```
+
+- Step 4, kill the left processes.
+
+```bash
+killall -9 nebula-graphd
+killall -9 nebula-storaged
+killall -9 nebula-metad
+```
