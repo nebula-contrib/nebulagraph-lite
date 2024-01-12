@@ -2,12 +2,17 @@ import os
 import subprocess
 import time
 import functools
+
+from urllib.request import urlretrieve
 from typing import List, Type
 
 LOCALHOST_V4 = "127.0.0.1"
 DEFAULT_GRAPHD_PORT = 9669
 BASE_PATH = os.path.expanduser("~/.nebulagraph/lite")
 COLAB_BASE_PATH = "/content/.nebulagraph/lite"
+
+# Data set
+BASKETBALLPLAYER_DATASET_URL = "https://raw.githubusercontent.com/vesoft-inc/nebula-console/master/data/basketballplayer.ngql"
 
 
 def retry(
@@ -122,6 +127,7 @@ class nebulagraph_let:
 
     def create_nebulagraph_lite_folders(self):
         try:
+            os.makedirs(os.path.join(self.base_path, "data_set"), exist_ok=True)
             os.makedirs(os.path.join(self.base_path, "data/meta0"), exist_ok=True)
             os.makedirs(os.path.join(self.base_path, "logs/meta0"), exist_ok=True)
             os.makedirs(
@@ -250,8 +256,17 @@ class nebulagraph_let:
         # TODO: do 'SHOW HOSTS' to check if storaged is activated
 
     def load_basketballplayer_dataset(self):
+        url = BASKETBALLPLAYER_DATASET_URL
+        try:
+            urlretrieve(url, f"{self.base_path}/data_set/basketballplayer.ngql")
+        except Exception as e:
+            print(e)
+            raise Exception(
+                f"Failed to download basketballplayer dataset from {url}"
+            )
+
         udocker_command = (
-            f"run --rm "
+            f"run --rm -v {self.base_path}/data_set:/root/data "
             f"vesoft/nebula-console:v3 "
             f"-addr {self.host} -port {self.port} -u root -p nebula -e ':play basketballplayer'"
         )
