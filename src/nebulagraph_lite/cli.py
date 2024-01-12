@@ -63,6 +63,11 @@ def main():
         dest="clean_up",
         help="Run cleanup of the NebulaGraph data after stopping",
     )
+    subparsers.add_parser("version")
+    subparsers.add_parser("cleanup")
+    subparsers.add_parser("start_metad")
+    subparsers.add_parser("start_graphd")
+    subparsers.add_parser("start_storaged")
 
     args = parser.parse_args()
 
@@ -143,6 +148,8 @@ def main():
             base_path=base_path,
         )
         n.start_storage()
+    elif args.command == "version":
+        print(__version__)
     else:
         parser.print_help()
 
