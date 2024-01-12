@@ -74,7 +74,11 @@ Intrested in other play or production options?
 - docker-in-colab, https://github.com/drengskapur/docker-in-colab
 - NebulaGraph Docker, https://github.com/vesoft-inc/nebula-docker-compose
 
+
 ## FAQ
+
+<details>
+  <summary></summary>
 
 ### Why not docker?
 
@@ -137,3 +141,6 @@ killall -9 nebula-graphd
 killall -9 nebula-storaged
 killall -9 nebula-metad
 ```
+
+
+</details>
