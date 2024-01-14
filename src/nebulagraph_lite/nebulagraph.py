@@ -94,7 +94,9 @@ class NebulaGraphLet:
                 get_ipython().system("udocker --allow-root install > /dev/null")
                 get_ipython().system("useradd -m user > /dev/null")
                 return True
-        except:
+        except Exception as e:
+            if self._debug:
+                fancy_dict_print({"error": e})
             return False
 
     def clean_up(self):
@@ -232,7 +234,7 @@ class NebulaGraphLet:
             os.system(f"killall nebula-{service} > /dev/null 2>&1")
         except Exception as e:
             if self._debug:
-                fancy_print(f"[INFO] [DEBUG] failed to shoot {service}:", e)
+                fancy_print(f"[INFO] [DEBUG] failed to shoot {service}: {str(e)}")
 
     def _try_shoot_all_services(self):
         self._try_shoot_service("graphd")
@@ -241,8 +243,9 @@ class NebulaGraphLet:
         time.sleep(5)
         self._try_shoot_service("metad")
 
-    def start_metad(self):
-        self._try_shoot_service("metad")
+    def start_metad(self, shoot=False):
+        if shoot:
+            self._try_shoot_service("metad")
 
         udocker_command = (
             f"run --rm --user=root -v "
@@ -289,7 +292,12 @@ class NebulaGraphLet:
         )
         self._run_udocker_background(udocker_command)
         time.sleep(10)
-        # TODO: do 'SHOW HOSTS' to check if storaged is activated
+        udocker_command = (
+            f"run --rm "
+            f"vesoft/nebula-console:v3  "
+            f"-addr {self.host} -port {self.port} -u root -p nebula -e 'SHOW HOSTS'"
+        )
+        self._run_udocker_background(udocker_command)
 
     def load_basketballplayer_dataset(self):
         url = BASKETBALLPLAYER_DATASET_URL
@@ -325,8 +333,9 @@ class NebulaGraphLet:
             raise Exception("Failed to load basketballplayer dataset")
         time.sleep(10)
 
-    def start_storaged(self):
-        self._try_shoot_service("storaged")
+    def start_storaged(self, shoot=False):
+        if shoot:
+            self._try_shoot_service("storaged")
         udocker_command = (
             f"run --rm --user=root -v "
             f"{self.base_path}/data/storage0:/data/storage -v "
@@ -346,15 +355,16 @@ class NebulaGraphLet:
         if not self.on_colab:
             self._run_udocker_ps_filter("storaged")
 
-    def start(self):
+    def start(self, fresh=False):
+        shoot = bool(fresh)
         self.udocker_init()
         # async pull images
         self.udocker_pull("vesoft/nebula-metad:v3")
         self.udocker_pull_backgroud("vesoft/nebula-graphd:v3")
-        self.start_metad()
+        self.start_metad(shoot=shoot)
         self.udocker_pull_backgroud("vesoft/nebula-storaged:v3")
         self.start_graphd()
-        self.start_storaged()
+        self.start_storaged(shoot=shoot)
         time.sleep(10)
         self.activate_storaged()
         self.udocker_pull("vesoft/nebula-console:v3")
@@ -374,6 +384,23 @@ class NebulaGraphLet:
         self._run_udocker("ps")
 
     def stop(self):
+        """
+        Stop NebulaGraph-Lite services gracefully.
+        """
+        # We should stop graphd first, then storaged and finally metad
+        # We leverage killall to stop all services and sleep 10 seconds per service
+        # stop graphd
+        self._try_shoot_service("graphd")
+        # stop storaged
+        os.system("killall -s TERM nebula-storaged> /dev/null 2>&1")
+        time.sleep(15)
+        # stop metad by send signal to the process
+        os.system("killall -s TERM nebula-metad > /dev/null 2>&1")
+
+    def shutdown(self):
+        """
+        Shutdown the NebulaGraph-Lite services in quick way.
+        """
         if self.on_colab:
             self._run_udocker(
                 "ps | grep nebula | awk '{print $1}' | xargs -I {} udocker rm -f {}"
@@ -383,9 +410,17 @@ class NebulaGraphLet:
 
         # in other environments, we cannot assume awk/xargs are installed
         # let's get the container ids first
-        result = self._run_udocker("ps | grep nebula").stdout.decode()
-        container_ids = [line.split()[0] for line in result.split("\n") if line]
-        if container_ids:
-            self._run_udocker(f"rm {' '.join(container_ids)}")
+        try:
+            result = self._run_udocker("ps | grep nebula").stdout.decode()
+            container_ids = [line.split()[0] for line in result.split("\n") if line]
+            if container_ids:
+                self._run_udocker(f"rm {' '.join(container_ids)}")
+        except Exception as e:
+            if self._debug:
+                fancy_print(f"[INFO] [DEBUG] error when udocker ps, {e}")
 
         self._try_shoot_all_services()
+
+    def print_docker_ps(self):
+        result = self.docker_ps()
+        fancy_dict_print({"docker ps": result})

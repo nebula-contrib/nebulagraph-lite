@@ -5,7 +5,9 @@ from nebulagraph_lite import __version__
 
 
 def main():
-    parser = ArgumentParser(description="NebulaGraph Lite")
+    parser = ArgumentParser(
+        description="NebulaGraph Lite, your goto Graph Dev Runner"
+    )
     subparsers = parser.add_subparsers(dest="command")
 
     parser.add_argument(
@@ -55,19 +57,14 @@ def main():
         help="Run cleanup of the NebulaGraph data first before starting",
     )
 
-    stop_parser = subparsers.add_parser("stop")
-    stop_parser.add_argument(
-        "-u",
-        "--cleanup",
-        action="store_true",
-        dest="clean_up",
-        help="Run cleanup of the NebulaGraph data after stopping",
-    )
+    subparsers.add_parser("stop")
+    subparsers.add_parser("shutdown")
     subparsers.add_parser("version")
     subparsers.add_parser("cleanup")
     subparsers.add_parser("start_metad")
     subparsers.add_parser("start_graphd")
     subparsers.add_parser("start_storaged")
+    # subparsers.add_parser("ps")
 
     args = parser.parse_args()
 
@@ -93,16 +90,14 @@ def main():
         n = nebulagraph_let(
             **args,
         )
-        n.start()
+        n.start(fresh=bool(start_clean_up))
     elif args.command == "stop":
-        stop_clean_up = args.clean_up
         args = {
             "debug": debug,
             "in_container": in_container,
             "host": host,
             "port": port,
             "base_path": base_path,
-            "clean_up": stop_clean_up,
         }
         # pop None values
         args = {k: v for k, v in args.items() if v is not None}
@@ -110,8 +105,15 @@ def main():
             **args,
         )
         n.stop()
-        if stop_clean_up:
-            n.clean_up()
+    elif args.command == "shutdown":
+        n = nebulagraph_let(
+            debug=debug,
+            in_container=in_container,
+            host=host,
+            port=port,
+            base_path=base_path,
+        )
+        n.shutdown()
     elif args.command == "cleanup":
         n = nebulagraph_let(
             debug=debug,
@@ -129,7 +131,7 @@ def main():
             port=port,
             base_path=base_path,
         )
-        n.start_meta()
+        n.start_metad()
     elif args.command == "start_graphd":
         n = nebulagraph_let(
             debug=debug,
@@ -138,7 +140,7 @@ def main():
             port=port,
             base_path=base_path,
         )
-        n.start_graph()
+        n.start_graphd()
     elif args.command == "start_storaged":
         n = nebulagraph_let(
             debug=debug,
@@ -147,9 +149,18 @@ def main():
             port=port,
             base_path=base_path,
         )
-        n.start_storage()
+        n.start_storaged()
     elif args.command == "version":
         print(__version__)
+    #    elif args.command == "ps":
+    #        n = nebulagraph_let(
+    #            debug=debug,
+    #            in_container=in_container,
+    #            host=host,
+    #            port=port,
+    #            base_path=base_path,
+    #        )
+    #        n.print_docker_ps()
     else:
         parser.print_help()
 
