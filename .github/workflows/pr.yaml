@@ -1,8 +1,9 @@
-name: PR Workflow
+name: Build, Lint, and Test
 on:
   pull_request:
     branches:
       - main
+  workflow_call:
 
 jobs:
   build-and-lint-test:
@@ -10,10 +11,12 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+
     - uses: pdm-project/setup-pdm@v3
       with:
         python-version: '3.x'
         cache: true
+
     - name: Install dependencies
       run: pdm install
 
@@ -34,10 +37,12 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
+
     - name: Run Build and Install
       run: |
         echo "Running tests on ${{ matrix.os }}"
         pip3 install .
+
     - name: Dry run `nebulagraph start`
       run: nebulagraph --debug start --cleanup
 
@@ -51,6 +56,7 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
+
     - name: Install Dependencies
       run: |
         if grep -qEi "debian|buntu" /etc/*release; then
@@ -60,6 +66,7 @@ jobs:
         fi
     - name: Install NebulaGraph-Lite
       run: pip3 install .
+
     - name: Run NebulaGraph-Lite in container
       run: nebulagraph --debug --container start
 
