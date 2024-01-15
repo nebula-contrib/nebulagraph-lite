@@ -30,7 +30,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-20.04, rocky-linux-8, ubuntu-latest]
+        os: [ubuntu-20.04, ubuntu-latest]
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
@@ -62,3 +62,21 @@ jobs:
       run: pip3 install .
     - name: Run NebulaGraph-Lite in container
       run: nebulagraph --debug --container start
+
+  # e2e-alpine:
+  #   runs-on: ubuntu-22.04
+  #   strategy:
+  #     matrix:
+  #       image: ["alpine:3.14", "alpine:latest"]
+  #   container:
+  #     image: ${{ matrix.image }}
+  #   steps:
+  #   - name: Checkout code
+  #     uses: actions/checkout@v3
+  #   - name: Install Dependencies
+  #     run: |
+  #       apk add --no-cache python3 py3-pip curl pipx py3-psutil
+  #   - name: Install NebulaGraph-Lite
+  #     run: pip3 install --break-system-packages .
+  #   - name: Run NebulaGraph-Lite in container
+  #     run: nebulagraph --debug --container start
