@@ -5,7 +5,7 @@ on:
       - main
 
 jobs:
-  build:
+  build-and-lint-test:
     runs-on: ubuntu-22.04
 
     steps:
@@ -45,14 +45,19 @@ jobs:
     runs-on: ubuntu-22.04
     strategy:
       matrix:
-        os: [ubuntu-20.04, centos-7, rocky-linux-8, ubuntu-latest]
+        os: [ubuntu:20.04, centos-7, rocky-linux-8, ubuntu:latest]
     container:
       image: ${{ matrix.os }}
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
     - name: Install Dependencies
-      run: apt-get update && apt-get install python3-pip curl -y
+      run: |
+        if grep -qEi "debian|buntu" /etc/*release; then
+          apt-get update && apt-get install python3-pip curl -y
+        else
+          yum update -y && yum install python3-pip curl -y
+        fi
     - name: Install NebulaGraph-Lite
       run: pip3 install .
     - name: Run NebulaGraph-Lite in container
