@@ -257,6 +257,13 @@ class NebulaGraphLet:
             )
         self._run_udocker(udocker_create_command)
 
+        # fakechroot is used, see #18
+        # TODO: leverage F2 in MUSL/Alpine Linux
+        udocker_setup_command = (
+            "--debug setup --execmode=F1 nebula-metad"
+        )
+        self._run_udocker(udocker_setup_command)
+
         udocker_command = (
             f"run --rm --user=root -v "
             f"{self.base_path}/data/meta0:/data/meta -v "
@@ -367,6 +374,13 @@ class NebulaGraphLet:
                 f"\nudocker {udocker_create_command}"
             )
         self._run_udocker(udocker_create_command)
+
+        # fakechroot is used, see #18
+        # TODO: leverage F2 in MUSL/Alpine Linux
+        udocker_setup_command = (
+            "--debug setup --execmode=F1 nebula-storaged"
+        )
+        self._run_udocker(udocker_setup_command)
 
         udocker_command = (
             f"run --rm --user=root -v "
