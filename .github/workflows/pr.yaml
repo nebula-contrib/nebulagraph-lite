@@ -19,6 +19,9 @@ jobs:
 
     - name: Lint
       run: pdm run lint
+
+    - name: Build and Install NebulaGraph-Lite
+      run: pip3 install .
     
     - name: Dry run `nebulagraph start`
-      run: pdm run nebulagraph --debug start --cleanup
+      run: nebulagraph --debug start --cleanup
