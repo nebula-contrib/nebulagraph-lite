@@ -45,9 +45,9 @@ jobs:
     runs-on: ubuntu-22.04
     strategy:
       matrix:
-        os: [ubuntu:20.04, centos-7, rocky-linux-8, ubuntu:latest]
+        image: ["ubuntu:20.04", "centos:7", "rockylinux:9", "ubuntu:latest"]
     container:
-      image: ${{ matrix.os }}
+      image: ${{ matrix.image }}
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
