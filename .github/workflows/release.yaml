@@ -1,0 +1,25 @@
+name: Publish Release to PyPI
+
+on:
+  release:
+    types:
+      - published
+
+jobs:
+  ci:
+    runs-on: ubuntu-22.04
+
+    steps:
+    - uses: actions/checkout@v3
+    - uses: pdm-project/setup-pdm@v3
+      with:
+        python-version: '3.x'
+        cache: true
+    - name: Install dependencies
+      run: pdm install
+
+    - name: Build and publish
+      env:
+        PDM_PUBLISH_USERNAME: ${{ secrets.PYPI_NAME }}
+        PDM_PUBLISH_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
+      run: pdm publish
