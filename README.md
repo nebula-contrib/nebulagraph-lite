@@ -10,6 +10,8 @@
 [![pypi-version](https://img.shields.io/pypi/v/nebulagraph-lite)](https://pypi.org/project/nebulagraph-lite/)
 [![python-version](https://img.shields.io/badge/python-3.8%20|%203.9%20|%203.10%20|%203.11%20|%203.12-blue)](https://www.python.org/)
 
+[![Build Checks](https://github.com/wey-gu/nebulagraph-lite/actions/workflows/release.yaml/badge.svg)](https://github.com/wey-gu/nebulagraph-lite/actions/workflows/release.yaml)
+
 Try NebulaGraph with `pip install`, on Linux/ WSL2 or even [Google Colab](https://bit.ly/nebula-colab)!
 
 ## How to use
