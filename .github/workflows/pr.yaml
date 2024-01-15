@@ -1,0 +1,24 @@
+name: PR Workflow
+on:
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+
+    steps:
+    - uses: actions/checkout@v3
+    - uses: pdm-project/setup-pdm@v3
+      with:
+        python-version: '3.x'
+        cache: true
+    - name: Install dependencies
+      run: pdm install
+
+    - name: Lint
+      run: pdm run lint
+    
+    - name: Dry run nebulagraph start
+      run: nebulagraph --debug start --cleanup
