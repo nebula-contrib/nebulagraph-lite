@@ -25,12 +25,7 @@ path = "src/nebulagraph_lite/__init__.py"
 package-type = "application"
 
 [tool.pdm.dev-dependencies]
-jupyter = [
-    "ipython-ngql>=0.7.5",
-]
-client = [
-    "nebula3-python>=3.4.0",
-]
+
 dev = [
     "black>=23.12.1",
 ]

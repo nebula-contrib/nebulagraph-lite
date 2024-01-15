@@ -6,7 +6,7 @@ on:
       - published
 
 jobs:
-  ci:
+  release-and-publish:
     runs-on: ubuntu-22.04
 
     steps:
