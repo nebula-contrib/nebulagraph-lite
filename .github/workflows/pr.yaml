@@ -48,8 +48,6 @@ jobs:
         os: [ubuntu-20.04, centos-7, rocky-linux-8, ubuntu-latest]
     container:
       image: ${{ matrix.os }}
-    container:
-      image: ubuntu:latest
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
