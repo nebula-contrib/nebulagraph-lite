@@ -90,7 +90,7 @@ class NebulaGraphLet:
             from IPython import get_ipython
 
             if "google.colab" in str(get_ipython()):
-                fancy_print("[INFO] Detected that we are running on Google Colab!")
+                fancy_print("Info: Detected that we are running on Google Colab!")
                 # Thanks to https://github.com/drengskapur/docker-in-colab by drengskapur
                 get_ipython().system("pip install udocker > /dev/null")
                 get_ipython().system("udocker --allow-root install > /dev/null")
@@ -185,7 +185,7 @@ class NebulaGraphLet:
             )
         if output and self._debug:
             fancy_print(
-                f"[INFO] [DEBUG] udocker command output:\n{output.decode()}"
+                f"Info: [DEBUG] udocker command output:\n{output.decode()}"
             )
         return result
 
@@ -237,7 +237,7 @@ class NebulaGraphLet:
             os.system(f"killall nebula-{service} > /dev/null 2>&1")
         except Exception as e:
             if self._debug:
-                fancy_print(f"[INFO] [DEBUG] failed to shoot {service}: {str(e)}")
+                fancy_print(f"Info: [DEBUG] failed to shoot {service}: {str(e)}")
 
     def _try_shoot_all_services(self):
         self._try_shoot_service("graphd")
@@ -253,7 +253,7 @@ class NebulaGraphLet:
         udocker_create_command = "ps | grep metad || udocker --debug --allow-root create --name=nebula-metad vesoft/nebula-metad:v3"
         if self._debug:
             fancy_print(
-                "[INFO] [DEBUG] creating metad container... with command:"
+                "Info: [DEBUG] creating metad container... with command:"
                 f"\nudocker {udocker_create_command}"
             )
         self._run_udocker(udocker_create_command)
@@ -273,7 +273,7 @@ class NebulaGraphLet:
         )
         if self._debug:
             fancy_print(
-                "[INFO] [DEBUG] starting metad... with command:"
+                "Info: [DEBUG] starting metad... with command:"
                 f"\nudocker {udocker_command}"
             )
         self._run_udocker_background(udocker_command)
@@ -287,7 +287,7 @@ class NebulaGraphLet:
         udocker_create_command = "ps | grep graphd || udocker --debug create --name=nebula-graphd vesoft/nebula-graphd:v3"
         if self._debug:
             fancy_print(
-                "[INFO] [DEBUG] creating graphd container... with command:"
+                "Info: [DEBUG] creating graphd container... with command:"
                 f"\nudocker {udocker_create_command}"
             )
         self._run_udocker(udocker_create_command)
@@ -301,7 +301,7 @@ class NebulaGraphLet:
         )
         if self._debug:
             fancy_print(
-                "[INFO] [DEBUG] starting graphd... with command:"
+                "Info: [DEBUG] starting graphd... with command:"
                 f"\nudocker {udocker_command}"
             )
         self._run_udocker_background(udocker_command)
@@ -365,7 +365,7 @@ class NebulaGraphLet:
         udocker_create_command = "ps | grep storaged || udocker --debug --allow-root create --name=nebula-storaged vesoft/nebula-storaged:v3"
         if self._debug:
             fancy_print(
-                "[INFO] [DEBUG] creating storaged container... with command:"
+                "Info: [DEBUG] creating storaged container... with command:"
                 f"\nudocker {udocker_create_command}"
             )
         self._run_udocker(udocker_create_command)
@@ -385,7 +385,7 @@ class NebulaGraphLet:
         )
         if self._debug:
             fancy_print(
-                "[INFO] [DEBUG] starting storaged... with command:"
+                "Info: [DEBUG] starting storaged... with command:"
                 f"\nudocker {udocker_command}"
             )
 
@@ -408,7 +408,7 @@ class NebulaGraphLet:
         self.activate_storaged()
         self.udocker_pull("vesoft/nebula-console:v3")
         time.sleep(20)
-        fancy_print("[INFO] loading basketballplayer dataset...")
+        fancy_print("Info: loading basketballplayer dataset...")
         self.load_basketballplayer_dataset()
         fancy_print(BANNER_ASCII)
         fancy_print("[ OK ] nebulagraph_lite started successfully!", "purple")
@@ -436,7 +436,7 @@ class NebulaGraphLet:
             kill_process_by_pid(storaged_pid)
         except Exception as e:
             if self._debug:
-                fancy_print(f"[INFO] [DEBUG] error when kill storaged, {e}")
+                fancy_print(f"Info: [DEBUG] error when kill storaged, {e}")
         time.sleep(15)
         # stop metad by send signal to the process
         metad_pid = get_pid_by_port(9559)
@@ -444,7 +444,7 @@ class NebulaGraphLet:
             kill_process_by_pid(metad_pid)
         except Exception as e:
             if self._debug:
-                fancy_print(f"[INFO] [DEBUG] error when kill metad, {e}")
+                fancy_print(f"Info: [DEBUG] error when kill metad, {e}")
 
     def shutdown(self):
         """
@@ -466,7 +466,7 @@ class NebulaGraphLet:
                 self._run_udocker(f"rm {' '.join(container_ids)}")
         except Exception as e:
             if self._debug:
-                fancy_print(f"[INFO] [DEBUG] error when udocker ps, {e}")
+                fancy_print(f"Info: [DEBUG] error when udocker ps, {e}")
 
         self._try_shoot_all_services()
 
