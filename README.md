@@ -42,9 +42,13 @@ n.start()
 </td>
 <td>
 
+
 ```bash
-$ nebulagraph start
+
+nebulagraph start  
+
 ```
+
 
 </td>
 </tr>
