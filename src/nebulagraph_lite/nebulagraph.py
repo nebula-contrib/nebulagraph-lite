@@ -11,6 +11,7 @@ from nebulagraph_lite.utils import (
     BANNER_ASCII,
     get_pid_by_port,
     kill_process_by_pid,
+    process_listening_on_port,
 )
 
 LOCALHOST_V4 = "127.0.0.1"
@@ -277,7 +278,7 @@ class NebulaGraphLet:
         self._run_udocker_background(udocker_command)
         time.sleep(10)
         if not self.on_colab:
-            self._run_udocker_ps_filter("metad")
+            process_listening_on_port(9559)
 
     def start_graphd(self):
         self._try_shoot_service("graphd")
@@ -305,7 +306,8 @@ class NebulaGraphLet:
         self._run_udocker_background(udocker_command)
         time.sleep(10)
         if not self.on_colab:
-            self._run_udocker_ps_filter("graphd")
+            # self._run_udocker_ps_filter("graphd")
+            process_listening_on_port(self.port)
 
     def activate_storaged(self):
         udocker_command = (
@@ -390,7 +392,8 @@ class NebulaGraphLet:
         self._run_udocker_background(udocker_command)
         time.sleep(20)
         if not self.on_colab:
-            self._run_udocker_ps_filter("storaged")
+            # self._run_udocker_ps_filter("storaged")
+            pass
 
     def start(self, fresh=False):
         shoot = bool(fresh)

@@ -116,3 +116,11 @@ def kill_process_by_pid(pid):
         print(f"Process with PID {pid} has been terminated.")
     except psutil.NoSuchProcess:
         print(f"No process with PID {pid} exists.")
+
+
+@retry((Exception,), tries=3, delay=5, backoff=3)
+def process_listening_on_port(port):
+    for conn in psutil.net_connections():
+        if conn.laddr.port == port and conn.status == "LISTEN":
+            return True
+    return False
