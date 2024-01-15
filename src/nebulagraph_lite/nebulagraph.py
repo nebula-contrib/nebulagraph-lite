@@ -247,10 +247,20 @@ class NebulaGraphLet:
         if shoot:
             self._try_shoot_service("metad")
 
+        udocker_create_command = (
+            "--debug create --name=nebula-metad " "vesoft/nebula-metad:v3"
+        )
+        if self._debug:
+            fancy_print(
+                "[INFO] [DEBUG] creating metad container... with command:"
+                f"\nudocker {udocker_create_command}"
+            )
+        self._run_udocker(udocker_create_command)
+
         udocker_command = (
             f"run --rm --user=root -v "
             f"{self.base_path}/data/meta0:/data/meta -v "
-            f"{self.base_path}/logs/meta0:/logs vesoft/nebula-metad:v3 "
+            f"{self.base_path}/logs/meta0:/logs nebula-metad "
             f"--meta_server_addrs={self.host}:9559 --local_ip={self.host} "
             f"--ws_ip={self.host} --port=9559 --ws_http_port=19559 "
             f"--data_path=/data/meta --log_dir=/logs --v=0 --minloglevel=0"
@@ -267,9 +277,20 @@ class NebulaGraphLet:
 
     def start_graphd(self):
         self._try_shoot_service("graphd")
+
+        udocker_create_command = (
+            "--debug create --name=nebula-graphd " "vesoft/nebula-graphd:v3"
+        )
+        if self._debug:
+            fancy_print(
+                "[INFO] [DEBUG] creating graphd container... with command:"
+                f"\nudocker {udocker_create_command}"
+            )
+        self._run_udocker(udocker_create_command)
+
         udocker_command = (
             f"run --rm --user=root -v "
-            f"{self.base_path}/logs/graph:/logs vesoft/nebula-graphd:v3 "
+            f"{self.base_path}/logs/graph:/logs graphd "
             f"--meta_server_addrs={self.host}:9559 --local_ip={self.host} "
             f"--ws_ip={self.host} --port={self.port} --ws_http_port=19669 "
             f"--log_dir=/logs --v=0 --minloglevel=0"
@@ -336,10 +357,21 @@ class NebulaGraphLet:
     def start_storaged(self, shoot=False):
         if shoot:
             self._try_shoot_service("storaged")
+
+        udocker_create_command = (
+            "--debug create --name=nebula-storaged " "vesoft/nebula-storaged:v3"
+        )
+        if self._debug:
+            fancy_print(
+                "[INFO] [DEBUG] creating storaged container... with command:"
+                f"\nudocker {udocker_create_command}"
+            )
+        self._run_udocker(udocker_create_command)
+
         udocker_command = (
             f"run --rm --user=root -v "
             f"{self.base_path}/data/storage0:/data/storage -v "
-            f"{self.base_path}/logs/storage0:/logs vesoft/nebula-storaged:v3 "
+            f"{self.base_path}/logs/storage0:/logs nebula-storaged "
             f"--meta_server_addrs={self.host}:9559 --local_ip={self.host} "
             f"--ws_ip={self.host} --port=9779 --ws_http_port=19779 "
             f"--data_path=/data/storage --log_dir=/logs --v=0 --minloglevel=0"
