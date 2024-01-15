@@ -9,6 +9,8 @@ from nebulagraph_lite.utils import (
     fancy_print,
     fancy_dict_print,
     BANNER_ASCII,
+    get_pid_by_port,
+    kill_process_by_pid,
 )
 
 LOCALHOST_V4 = "127.0.0.1"
@@ -231,6 +233,7 @@ class NebulaGraphLet:
             self._run_udocker(
                 f"ps | grep {service} | awk '{{print $1}}' | xargs -I {{}} udocker rm -f {{}}"
             )
+            # TODO: use psutil to kill the process
             os.system(f"killall nebula-{service} > /dev/null 2>&1")
         except Exception as e:
             if self._debug:
@@ -247,10 +250,23 @@ class NebulaGraphLet:
         if shoot:
             self._try_shoot_service("metad")
 
+        udocker_create_command = "ps | grep metad || udocker --debug --allow-root create --name=nebula-metad vesoft/nebula-metad:v3"
+        if self._debug:
+            fancy_print(
+                "[INFO] [DEBUG] creating metad container... with command:"
+                f"\nudocker {udocker_create_command}"
+            )
+        self._run_udocker(udocker_create_command)
+
+        # fakechroot is used, see #18
+        # TODO: leverage F2 in MUSL/Alpine Linux
+        udocker_setup_command = "--debug setup --execmode=F1 nebula-metad"
+        self._run_udocker(udocker_setup_command)
+
         udocker_command = (
             f"run --rm --user=root -v "
             f"{self.base_path}/data/meta0:/data/meta -v "
-            f"{self.base_path}/logs/meta0:/logs vesoft/nebula-metad:v3 "
+            f"{self.base_path}/logs/meta0:/logs nebula-metad "
             f"--meta_server_addrs={self.host}:9559 --local_ip={self.host} "
             f"--ws_ip={self.host} --port=9559 --ws_http_port=19559 "
             f"--data_path=/data/meta --log_dir=/logs --v=0 --minloglevel=0"
@@ -267,9 +283,18 @@ class NebulaGraphLet:
 
     def start_graphd(self):
         self._try_shoot_service("graphd")
+
+        udocker_create_command = "ps | grep graphd || udocker --debug create --name=nebula-graphd vesoft/nebula-graphd:v3"
+        if self._debug:
+            fancy_print(
+                "[INFO] [DEBUG] creating graphd container... with command:"
+                f"\nudocker {udocker_create_command}"
+            )
+        self._run_udocker(udocker_create_command)
+
         udocker_command = (
             f"run --rm --user=root -v "
-            f"{self.base_path}/logs/graph:/logs vesoft/nebula-graphd:v3 "
+            f"{self.base_path}/logs/graph:/logs nebula-graphd "
             f"--meta_server_addrs={self.host}:9559 --local_ip={self.host} "
             f"--ws_ip={self.host} --port={self.port} --ws_http_port=19669 "
             f"--log_dir=/logs --v=0 --minloglevel=0"
@@ -336,10 +361,24 @@ class NebulaGraphLet:
     def start_storaged(self, shoot=False):
         if shoot:
             self._try_shoot_service("storaged")
+
+        udocker_create_command = "ps | grep storaged || udocker --debug --allow-root create --name=nebula-storaged vesoft/nebula-storaged:v3"
+        if self._debug:
+            fancy_print(
+                "[INFO] [DEBUG] creating storaged container... with command:"
+                f"\nudocker {udocker_create_command}"
+            )
+        self._run_udocker(udocker_create_command)
+
+        # fakechroot is used, see #18
+        # TODO: leverage F2 in MUSL/Alpine Linux
+        udocker_setup_command = "--debug setup --execmode=F1 nebula-storaged"
+        self._run_udocker(udocker_setup_command)
+
         udocker_command = (
             f"run --rm --user=root -v "
             f"{self.base_path}/data/storage0:/data/storage -v "
-            f"{self.base_path}/logs/storage0:/logs vesoft/nebula-storaged:v3 "
+            f"{self.base_path}/logs/storage0:/logs nebula-storaged "
             f"--meta_server_addrs={self.host}:9559 --local_ip={self.host} "
             f"--ws_ip={self.host} --port=9779 --ws_http_port=19779 "
             f"--data_path=/data/storage --log_dir=/logs --v=0 --minloglevel=0"
@@ -392,10 +431,20 @@ class NebulaGraphLet:
         # stop graphd
         self._try_shoot_service("graphd")
         # stop storaged
-        os.system("killall -s TERM nebula-storaged> /dev/null 2>&1")
+        storaged_pid = get_pid_by_port(9779)
+        try:
+            kill_process_by_pid(storaged_pid)
+        except Exception as e:
+            if self._debug:
+                fancy_print(f"[INFO] [DEBUG] error when kill storaged, {e}")
         time.sleep(15)
         # stop metad by send signal to the process
-        os.system("killall -s TERM nebula-metad > /dev/null 2>&1")
+        metad_pid = get_pid_by_port(9559)
+        try:
+            kill_process_by_pid(metad_pid)
+        except Exception as e:
+            if self._debug:
+                fancy_print(f"[INFO] [DEBUG] error when kill metad, {e}")
 
     def shutdown(self):
         """

@@ -1,6 +1,7 @@
 import random
 import time
 import functools
+import psutil
 
 from typing import List, Type
 
@@ -99,3 +100,19 @@ def fancy_dict_print(d: dict, color: str = None) -> None:
         else:
             color = COLORS_rgb[color]
         print(f"\033[1;3;{color}m{key}: {value}\033[0m")
+
+
+def get_pid_by_port(port):
+    for conn in psutil.net_connections():
+        if conn.laddr.port == port and conn.status == "LISTEN":
+            return conn.pid
+    return None
+
+
+def kill_process_by_pid(pid):
+    try:
+        process = psutil.Process(pid)
+        process.terminate()
+        print(f"Process with PID {pid} has been terminated.")
+    except psutil.NoSuchProcess:
+        print(f"No process with PID {pid} exists.")
