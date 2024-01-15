@@ -22,7 +22,14 @@ Try NebulaGraph with `pip install`, on Linux/ WSL2 or even [Google Colab](https:
 pip3 install nebulagraph-lite
 ```
 
-> Start NebulaGraph Lite from Jupyter Notebook
+> Start NebulaGraph Lite
+
+<table>
+<tr>
+<td> From Jupyter Notebook: </td> <td> From CLI: </td>
+</tr>
+<tr>
+<td>
 
 ```python
 from nebulagraph_lite import nebulagraph_let as ng_let
@@ -32,16 +39,16 @@ n = ng_let()
 n.start()
 ```
 
-<details>
-  <summary>Click to see how to start with Shell</summary>
-
-> Start NebulaGraph Lite from CLI:
+</td>
+<td>
 
 ```bash
-nebulagraph start
+$ nebulagraph start
 ```
 
-</details>
+</td>
+</tr>
+</table>
 
 Voilà! It'ts up and running already now!
 
