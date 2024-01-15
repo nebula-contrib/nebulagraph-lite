@@ -184,9 +184,7 @@ class NebulaGraphLet:
                 f"udocker command failed with return code {result.returncode}"
             )
         if output and self._debug:
-            fancy_print(
-                f"Info: [DEBUG] udocker command output:\n{output.decode()}"
-            )
+            fancy_print(f"Info: [DEBUG] udocker command output:\n{output.decode()}")
         return result
 
     def _run_udocker_ps_filter(self, filter: str):
