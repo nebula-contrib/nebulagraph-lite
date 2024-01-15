@@ -346,6 +346,7 @@ class NebulaGraphLet:
             f"-addr {self.host} -port {self.port} -u root -p nebula -e ':play basketballplayer'"
         )
         try:
+            time.sleep(10)
             self._run_udocker(udocker_command)
         except Exception as e:
             fancy_dict_print(
@@ -355,8 +356,13 @@ class NebulaGraphLet:
                     "udocker_command": udocker_command,
                 }
             )
-            raise Exception("Failed to load basketballplayer dataset")
-        time.sleep(10)
+            fancy_dict_print(
+                {
+                    "Info:": "Failed to load basketballplayer dataset, probably because the graphd is not ready yet or the cluster is not healthy, try this later from the console manually",
+                    "command": f"udocker {udocker_command}",
+                    "error": str(e),
+                }
+            )
 
     def start_storaged(self, shoot=False):
         if shoot:
