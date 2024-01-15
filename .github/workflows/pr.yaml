@@ -56,7 +56,7 @@ jobs:
         if grep -qEi "debian|buntu" /etc/*release; then
           apt-get update && apt-get install python3-pip curl -y
         else
-          yum update -y && yum install python3-pip curl -y
+          yum update -y && yum install python3-pip -y
         fi
     - name: Install NebulaGraph-Lite
       run: pip3 install .
