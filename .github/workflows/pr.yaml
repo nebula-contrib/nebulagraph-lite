@@ -5,7 +5,7 @@ on:
       - main
 
 jobs:
-  build:
+  build-and-lint-test:
     runs-on: ubuntu-22.04
 
     steps:
@@ -25,3 +25,58 @@ jobs:
     
     - name: Dry run `nebulagraph start`
       run: nebulagraph --debug start --cleanup
+
+  e2e-bare-metal:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-20.04, ubuntu-latest]
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    - name: Run Build and Install
+      run: |
+        echo "Running tests on ${{ matrix.os }}"
+        pip3 install .
+    - name: Dry run `nebulagraph start`
+      run: nebulagraph --debug start --cleanup
+
+  e2e-docker:
+    runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        image: ["ubuntu:20.04", "rockylinux:9", "ubuntu:latest"]
+    container:
+      image: ${{ matrix.image }}
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    - name: Install Dependencies
+      run: |
+        if grep -qEi "debian|buntu" /etc/*release; then
+          apt-get update && apt-get install python3-pip curl -y
+        else
+          yum update -y && yum install python3-pip which -y
+        fi
+    - name: Install NebulaGraph-Lite
+      run: pip3 install .
+    - name: Run NebulaGraph-Lite in container
+      run: nebulagraph --debug --container start
+
+  # e2e-alpine:
+  #   runs-on: ubuntu-22.04
+  #   strategy:
+  #     matrix:
+  #       image: ["alpine:3.14", "alpine:latest"]
+  #   container:
+  #     image: ${{ matrix.image }}
+  #   steps:
+  #   - name: Checkout code
+  #     uses: actions/checkout@v3
+  #   - name: Install Dependencies
+  #     run: |
+  #       apk add --no-cache python3 py3-pip curl pipx py3-psutil
+  #   - name: Install NebulaGraph-Lite
+  #     run: pip3 install --break-system-packages .
+  #   - name: Run NebulaGraph-Lite in container
+  #     run: nebulagraph --debug --container start

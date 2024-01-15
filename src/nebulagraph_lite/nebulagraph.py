@@ -62,7 +62,7 @@ class NebulaGraphLet:
         else:
             self._python_bin_path = os.path.dirname(os.sys.executable)
             result = subprocess.run(
-                f"{self._python_bin_path}/udocker --help",
+                f"{self._python_bin_path}/udocker --allow-root --help",
                 shell=True,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
@@ -230,7 +230,7 @@ class NebulaGraphLet:
     def _try_shoot_service(self, service: str):
         try:
             self._run_udocker(
-                f"ps | grep {service} | awk '{{print $1}}' | xargs -I {{}} udocker rm -f {{}}"
+                f"ps | grep {service} | awk '{{print $1}}' | xargs -I {{}} udocker --allow-root rm -f {{}}"
             )
             # TODO: use psutil to kill the process
             os.system(f"killall nebula-{service} > /dev/null 2>&1")
@@ -283,7 +283,7 @@ class NebulaGraphLet:
     def start_graphd(self):
         self._try_shoot_service("graphd")
 
-        udocker_create_command = "ps | grep graphd || udocker --debug create --name=nebula-graphd vesoft/nebula-graphd:v3"
+        udocker_create_command = "ps | grep graphd || udocker --debug --allow-root create --name=nebula-graphd vesoft/nebula-graphd:v3"
         if self._debug:
             fancy_print(
                 "Info: [DEBUG] creating graphd container... with command:"
@@ -459,7 +459,7 @@ class NebulaGraphLet:
         """
         if self.on_colab:
             self._run_udocker(
-                "ps | grep nebula | awk '{print $1}' | xargs -I {} udocker rm -f {}"
+                "ps | grep nebula | awk '{print $1}' | xargs -I {} udocker --allow-root rm -f {}"
             )
             self._try_shoot_all_services()
             return

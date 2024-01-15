@@ -31,13 +31,13 @@ cd ~/.nebulagraph/lite
 #   --v=0 \
 #   --minloglevel=0
 
-udocker --debug create \
+udocker --allow-root --debug create \
   --name=nebula-metad \
   vesoft/nebula-metad:v3
 
 udocker --allow-root setup --execmode=F1 nebula-metad
 
-udocker --debug run \
+udocker --debug --allow-root run \
   --user=root \
   -v /home/w/.nebulagraph/lite/data/meta0:/data/meta \
   -v /home/w/.nebulagraph/lite/logs/meta0:/logs \
@@ -53,7 +53,7 @@ udocker --debug run \
   --minloglevel=0
 
 # Run NebulaGraph GraphD
-udocker --debug run --rm \
+udocker --debug --allow-root run --rm \
   --user=root \
   -v /home/w/.nebulagraph/lite/logs/graph:/logs \
   vesoft/nebula-graphd:v3 \
@@ -83,13 +83,13 @@ udocker --debug run --rm \
 #   --v=0 \
 #   --minloglevel=0
 
-udocker --debug create \
+udocker --debug --allow-root create \
   --name=nebula-storaged \
   vesoft/nebula-storaged:v3
 
 udocker --allow-root setup --execmode=F1 nebula-storaged
 
-udocker --debug run \
+udocker --debug --allow-root run \
   --user=root \
   -v /home/w/.nebulagraph/lite/data/storage0:/data/storage \
   -v /home/w/.nebulagraph/lite/logs/storage0:/logs \
@@ -107,6 +107,6 @@ udocker --debug run \
 # Run NebulaGraph Console
 
 # i.e. add hosts
-udocker --debug run --rm \
+udocker --debug --allow-root run --rm \
   vesoft/nebula-console:v3 \
   -addr 127.0.0.1 -port 39669 -u root -p nebula -e 'ADD HOSTS "127.0.0.1":9779'

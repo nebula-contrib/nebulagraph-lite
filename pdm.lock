@@ -5,7 +5,7 @@
 groups = ["default", "jupyter", "client", "dev"]
 strategy = ["cross_platform", "inherit_metadata"]
 lock_version = "4.4.1"
-content_hash = "sha256:cf303665ff86773f84706708aabf49b60df8e7a86b90842aa8c0b316bd8a5706"
+content_hash = "sha256:31244258e3266f450f984dfb762bd4bcd1fdbd89035d37d2dcc875ecda850fdb"
 
 [[package]]
 name = "black"
