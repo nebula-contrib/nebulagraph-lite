@@ -25,3 +25,32 @@ jobs:
     
     - name: Dry run `nebulagraph start`
       run: nebulagraph --debug start --cleanup
+
+  end-to-end-test-bare-metal:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-20.04, centos-7, rocky-linux-8, ubuntu-latest]
+    container:
+      image: ${{ matrix.os }}
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    - name: Run Build and Install
+      run: |
+        echo "Running tests on ${{ matrix.os }}"
+        pip3 install .
+    - name: Dry run `nebulagraph start`
+      run: nebulagraph --debug start --cleanup
+
+  end-to-end-test-docker:
+    runs-on: ubuntu-22.04
+    container:
+      image: ubuntu:latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    - name: Install NebulaGraph-Lite
+      run: pip3 install .
+    - name: Run NebulaGraph-Lite in container
+      run: nebulagraph --debug --container start
