@@ -29,7 +29,7 @@ n.start()
 ```
 
 <details>
-  <summary>Or from CLI</summary>
+  <summary>Click to see how to start with Shell</summary>
 
 > Start NebulaGraph Lite from CLI:
 
@@ -89,7 +89,7 @@ Intrested in other play or production options?
 ## FAQ
 
 <details>
-  <summary></summary>
+  <summary>Click to see FAQ</summary>
 
 ### Why not docker?
 
@@ -117,6 +117,12 @@ n = ng_let(in_container=True)
 n.start()
 ```
 
+Or in shell:
+
+```bash
+nebulagraph --container start
+```
+
 ### Does it support Windows?
 
 Yes, it supports Windows with WSL2 or other Linux VMs with a Hypervisor.
@@ -125,9 +131,18 @@ Yes, it supports Windows with WSL2 or other Linux VMs with a Hypervisor.
 
 - Step 1, from nebulagraph-lite, remove the udocker container and clean up the base path.
 
+Python:
+
 ```python
 n.stop()
 n.clean_up()
+```
+
+Shell:
+
+```bash
+nebulagraph stop
+nebulagraph cleanup
 ```
 
 - Step 2, pip uninstall nebulagraph-lite and dependencies.
