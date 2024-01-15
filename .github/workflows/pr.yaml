@@ -30,7 +30,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-20.04, centos-7, rocky-linux-8, ubuntu-latest]
+        os: [ubuntu-20.04, rocky-linux-8, ubuntu-latest]
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
@@ -45,7 +45,7 @@ jobs:
     runs-on: ubuntu-22.04
     strategy:
       matrix:
-        image: ["ubuntu:20.04", "centos:7", "rockylinux:9", "ubuntu:latest"]
+        image: ["ubuntu:20.04", "rockylinux:9", "ubuntu:latest"]
     container:
       image: ${{ matrix.image }}
     steps:
@@ -59,6 +59,6 @@ jobs:
           yum update -y && yum install python3-pip which -y
         fi
     - name: Install NebulaGraph-Lite
-      run: pip3 install . || pip3 install --user .
+      run: pip3 install .
     - name: Run NebulaGraph-Lite in container
       run: nebulagraph --debug --container start
