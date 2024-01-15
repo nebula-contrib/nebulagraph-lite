@@ -32,7 +32,8 @@ dev = [
 
 [tool.pdm.scripts]
 nebulagraph = {call = "nebulagraph_lite.cli:main"}
-fmt = "black -l 84 ."
+fmt = "black --line-length 84 ."
+lint = "black --line-length 84 --check ."
 
 [project.scripts]
 nebulagraph = "nebulagraph_lite.cli:main"
