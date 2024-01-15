@@ -91,11 +91,11 @@ Intrested in other play or production options?
 
 ## Supported Platforms
 
-[![Ubuntu Supported](https://img.shields.io/badge/Ubuntu-Supported-green?logo=ubuntu)](https://github.com/wey-gu/nebulagraph-lite)
-[![Google Colab Supported](https://img.shields.io/badge/Google%20Colab-Supported-green?logo=googlecolab)](https://github.com/wey-gu/nebulagraph-lite)
-[![RockyLinux Supported](https://img.shields.io/badge/RockyLinux-Supported-green?logo=rockylinux)](https://github.com/wey-gu/nebulagraph-lite)
-[![Nested**Container** Supported](https://img.shields.io/badge/NestedContainer-Supported-green?logo=docker)](https://github.com/wey-gu/nebulagraph-lite)
-[![WSL2 Supported](https://img.shields.io/badge/WSL2-Supported-green?logo=windows)](https://github.com/wey-gu/nebulagraph-lite)
+[![Ubuntu ✔](https://img.shields.io/badge/Ubuntu-✔-green?logo=ubuntu)](https://github.com/wey-gu/nebulagraph-lite)
+[![Google Colab ✔](https://img.shields.io/badge/Google%20Colab-✔-green?logo=googlecolab)](https://github.com/wey-gu/nebulagraph-lite)
+[![RockyLinux ✔](https://img.shields.io/badge/RockyLinux-✔-green?logo=rockylinux)](https://github.com/wey-gu/nebulagraph-lite)
+[![Nested**Container** ✔](https://img.shields.io/badge/NestedContainer-✔-green?logo=docker)](https://github.com/wey-gu/nebulagraph-lite)
+[![WSL2 ✔](https://img.shields.io/badge/WSL2-✔-green?logo=windows)](https://github.com/wey-gu/nebulagraph-lite)
 
 ## FAQ
 
