@@ -26,7 +26,7 @@ jobs:
     - name: Dry run `nebulagraph start`
       run: nebulagraph --debug start --cleanup
 
-  end-to-end-test-bare-metal:
+  e2e-bare-metal:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -41,7 +41,7 @@ jobs:
     - name: Dry run `nebulagraph start`
       run: nebulagraph --debug start --cleanup
 
-  end-to-end-test-docker:
+  e2e-docker:
     runs-on: ubuntu-22.04
     strategy:
       matrix:
@@ -59,6 +59,6 @@ jobs:
           yum update -y && yum install python3-pip which -y
         fi
     - name: Install NebulaGraph-Lite
-      run: pip3 install --user .
+      run: pip3 install . || pip3 install --user .
     - name: Run NebulaGraph-Lite in container
       run: nebulagraph --debug --container start
