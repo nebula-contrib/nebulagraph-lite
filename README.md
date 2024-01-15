@@ -89,6 +89,13 @@ Intrested in other play or production options?
 - docker-in-colab, https://github.com/drengskapur/docker-in-colab
 - NebulaGraph Docker, https://github.com/vesoft-inc/nebula-docker-compose
 
+## Supported Platforms
+
+[![Ubuntu Supported](https://img.shields.io/badge/Ubuntu-Supported-green?logo=ubuntu)](https://github.com/wey-gu/nebulagraph-lite)
+[![Google Colab Supported](https://img.shields.io/badge/Google%20Colab-Supported-green?logo=googlecolab)](https://github.com/wey-gu/nebulagraph-lite)
+[![RockyLinux Supported](https://img.shields.io/badge/RockyLinux-Supported-green?logo=rockylinux)](https://github.com/wey-gu/nebulagraph-lite)
+[![Nested**Container** Supported](https://img.shields.io/badge/NestedContainer-Supported-green?logo=docker)](https://github.com/wey-gu/nebulagraph-lite)
+[![WSL2 Supported](https://img.shields.io/badge/WSL2-Supported-green?logo=windows)](https://github.com/wey-gu/nebulagraph-lite)
 
 ## FAQ
 
