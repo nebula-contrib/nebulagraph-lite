@@ -283,7 +283,7 @@ class NebulaGraphLet:
     def start_graphd(self):
         self._try_shoot_service("graphd")
 
-        udocker_create_command = "ps | grep graphd || udocker --debug create --name=nebula-graphd vesoft/nebula-graphd:v3"
+        udocker_create_command = "ps | grep graphd || udocker --debug --allow-root create --name=nebula-graphd vesoft/nebula-graphd:v3"
         if self._debug:
             fancy_print(
                 "Info: [DEBUG] creating graphd container... with command:"

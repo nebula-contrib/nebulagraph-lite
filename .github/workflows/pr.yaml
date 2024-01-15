@@ -54,11 +54,11 @@ jobs:
     - name: Install Dependencies
       run: |
         if grep -qEi "debian|buntu" /etc/*release; then
-          apt-get update && apt-get install python3-pip curl -y
+          apt-get update && apt-get install python3-pip curl which -y
         else
-          yum update -y && yum install python3-pip -y
+          yum update -y && yum install python3-pip which -y
         fi
     - name: Install NebulaGraph-Lite
-      run: pip3 install .
+      run: pip3 install --user .
     - name: Run NebulaGraph-Lite in container
       run: nebulagraph --debug --container start
