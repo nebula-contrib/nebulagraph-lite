@@ -20,5 +20,5 @@ jobs:
     - name: Lint
       run: pdm run lint
     
-    - name: Dry run nebulagraph start
-      run: nebulagraph --debug start --cleanup
+    - name: Dry run `nebulagraph start`
+      run: pdm run nebulagraph --debug start --cleanup
