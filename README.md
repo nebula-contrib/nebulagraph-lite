@@ -1,4 +1,8 @@
-# NebulaGraph Lite
+<div>
+  <img src="https://github.com/wey-gu/nebulagraph-lite/assets/1651790/446203e6-9db5-43a3-9b87-44ebd9c87b0d" alt="NebulaGraph-Lite-logo" style="float:left; height:100px;">
+  <h1 style="margin-left:110px;">NebulaGraph Lite</h1>
+</div>
+
 
 [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://bit.ly/nebula-colab)
 [![Jupyter](https://img.shields.io/badge/Jupyter-Supported-brightgreen)](https://github.com/jupyterlab/jupyterlab)
