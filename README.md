@@ -183,16 +183,4 @@ pip3 uninstall nebulagraph-lite udocker
 rm -rf ~/.udocker
 ```
 
-- Step 4, kill the left processes, in case of any.
-
-```bash
-ss -plunt | grep "9559\|9669\|9779"
-# if any, kill them with killall or other tools
-
-killall -9 nebula-graphd
-killall -9 nebula-storaged
-killall -9 nebula-metad
-```
-
-
 </details>
