@@ -3,6 +3,8 @@
   <h1 style="margin-left:110px;">NebulaGraph Lite</h1>
 </div>
 
+Try NebulaGraph with `pip install`, on Linux/ WSL2 or even [Google Colab](https://bit.ly/nebula-colab), in container, rootless.
+
 [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://bit.ly/nebula-colab)
 [![Jupyter](https://img.shields.io/badge/Jupyter-Supported-brightgreen)](https://github.com/jupyterlab/jupyterlab)
 [![for NebulaGraph](https://img.shields.io/badge/Toolchain-NebulaGraph-blue)](https://github.com/vesoft-inc/nebula)
@@ -14,8 +16,6 @@
 [![python-version](https://img.shields.io/badge/python-3.8%20|%203.9%20|%203.10%20|%203.11%20|%203.12-blue)](https://www.python.org/)
 
 [![Build Checks](https://github.com/wey-gu/nebulagraph-lite/actions/workflows/release.yaml/badge.svg)](https://github.com/wey-gu/nebulagraph-lite/actions/workflows/release.yaml)
-
-Try NebulaGraph with `pip install`, on Linux/ WSL2 or even [Google Colab](https://bit.ly/nebula-colab)!
 
 ## How to use
 
