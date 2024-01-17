@@ -92,16 +92,18 @@ Intrested in other play or production options?
 
 ### Play and Dev
 
-- [Docker Compose](https://github.com/vesoft-inc/nebula-docker-compose), if you are comfortable on single server
+- [Docker Compose](https://github.com/vesoft-inc/nebula-docker-compose), if you are comfortable to play with Docker on single server.
 - [nebula-up](https://github.com/wey-gu/nebula-up), one-liner test env installer on single server, support studio, dashboard, nebulagraph algorithm, exchange etc, all-in-one.
 - [Docker Extension](https://github.com/nebula-contrib/nebulagraph-docker-ext), one-click on Docker Desktop(macOS, windows) on desktop machines, in GUI flavor.
 - [Nebula-Operator-KinD](https://github.com/wey-gu/nebula-operator-kind), Nebula K8s Operator with K8s-in-Docker, one-liner test env with docker+k8s+nebulagrpah-operator, try NebulaGraph on K8s with ease on your single server.
 
 ## Acknowledgements
 
-- udocker, https://github.com/indigo-dc/udocker
-- docker-in-colab, https://github.com/drengskapur/docker-in-colab
-- NebulaGraph Docker, https://github.com/vesoft-inc/nebula-docker-compose
+- udocker, https://github.com/indigo-dc/udocker, the foundation of this project
+- Fakechroot, https://github.com/dex4er/fakechroot, the engine runs MetaD and StorageD
+- PRoot, https://proot-me.github.io, the engine runs GraphD and Console
+- docker-in-colab, https://github.com/drengskapur/docker-in-colab, inspired our Colab capablity
+- NebulaGraph Docker, https://github.com/vesoft-inc/nebula-docker-compose, the container images we leveraged
 
 ## Supported Platforms
 
