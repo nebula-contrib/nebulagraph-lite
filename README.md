@@ -1,5 +1,5 @@
 <div>
-  <img src="https://github.com/wey-gu/nebulagraph-lite/assets/1651790/446203e6-9db5-43a3-9b87-44ebd9c87b0d" alt="NebulaGraph-Lite-logo" height="100" style="float:left;">
+  <img src="https://github.com/wey-gu/nebulagraph-lite/assets/1651790/97b5dccb-bca1-4141-b426-03bcb3761a10" alt="NebulaGraph-Lite-logo" height="100" style="float:left;">
   <h1 style="margin-left:110px;">NebulaGraph Lite</h1>
 </div>
 
