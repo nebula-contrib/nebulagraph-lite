@@ -22,6 +22,9 @@ COLAB_BASE_PATH = "/content/.nebulagraph/lite"
 # Data set
 BASKETBALLPLAYER_DATASET_URL = "https://raw.githubusercontent.com/vesoft-inc/nebula-console/master/data/basketballplayer.ngql"
 
+# CN Docker-Registry Mirror
+CN_DOCKER_REGISTRY_MIRROR = "dockerproxy.com"
+
 
 class NebulaGraphLet:
     def __init__(
@@ -85,6 +88,28 @@ class NebulaGraphLet:
         self.in_container = in_container if in_container is not None else False
 
         self.create_nebulagraph_lite_folders()
+
+        self._container_image_prefix = (
+            ""
+            if self._is_docker_hub_accessible()
+            else f"{CN_DOCKER_REGISTRY_MIRROR}/"
+        )
+
+    def _is_docker_hub_accessible(self):
+        import urllib.request
+
+        try:
+            response = urllib.request.urlopen("https://hub.docker.com/", timeout=5)
+            return response.getcode() == 200
+        except urllib.error.URLError as e:
+            if self._debug:
+                fancy_dict_print(
+                    {
+                        "message": "Failed to access Docker Hub, will try to use CN Docker-Registry Mirror",
+                        "error": e,
+                    }
+                )
+            return False
 
     def _is_running_on_colab(self):
         try:
@@ -164,7 +189,7 @@ class NebulaGraphLet:
         if self.on_colab:
             return self._run_udocker_on_colab(command)
         udocker_command_prefix = os.path.join(self._python_bin_path, "udocker")
-        if self.in_container:
+        if self.in_container or self.on_ipython:
             udocker_command_prefix = udocker_command_prefix + " --allow-root"
         udocker_command = f"{udocker_command_prefix} {command}"
         result = subprocess.run(
@@ -208,7 +233,7 @@ class NebulaGraphLet:
             return
 
         udocker_command_prefix = os.path.join(self._python_bin_path, "udocker")
-        if self.in_container:
+        if self.in_container or self.on_ipython:
             udocker_command_prefix = udocker_command_prefix + " --allow-root"
         udocker_command = f"{udocker_command_prefix} {command} &"
         subprocess.Popen(
@@ -249,7 +274,7 @@ class NebulaGraphLet:
         if shoot:
             self._try_shoot_service("metad")
 
-        udocker_create_command = "ps | grep metad || udocker --debug --allow-root create --name=nebula-metad vesoft/nebula-metad:v3"
+        udocker_create_command = f"ps | grep metad || udocker --debug --allow-root create --name=nebula-metad {self._container_image_prefix}vesoft/nebula-metad:v3"
         if self._debug:
             fancy_print(
                 "Info: [DEBUG] creating metad container... with command:"
@@ -283,7 +308,7 @@ class NebulaGraphLet:
     def start_graphd(self):
         self._try_shoot_service("graphd")
 
-        udocker_create_command = "ps | grep graphd || udocker --debug --allow-root create --name=nebula-graphd vesoft/nebula-graphd:v3"
+        udocker_create_command = f"ps | grep graphd || udocker --debug --allow-root create --name=nebula-graphd {self._container_image_prefix}vesoft/nebula-graphd:v3"
         if self._debug:
             fancy_print(
                 "Info: [DEBUG] creating graphd container... with command:"
@@ -312,14 +337,14 @@ class NebulaGraphLet:
     def activate_storaged(self):
         udocker_command = (
             f"run --rm "
-            f"vesoft/nebula-console:v3 "
+            f"{self._container_image_prefix}vesoft/nebula-console:v3 "
             f"-addr {self.host} -port {self.port} -u root -p nebula -e 'ADD HOSTS \"{self.host}\":9779'"
         )
         self._run_udocker_background(udocker_command)
         time.sleep(10)
         udocker_command = (
             f"run --rm "
-            f"vesoft/nebula-console:v3  "
+            f"{self._container_image_prefix}vesoft/nebula-console:v3  "
             f"-addr {self.host} -port {self.port} -u root -p nebula -e 'SHOW HOSTS'"
         )
         self._run_udocker_background(udocker_command)
@@ -342,7 +367,7 @@ class NebulaGraphLet:
 
         udocker_command = (
             f"run --rm -v {self.base_path}/data_set:/root/data "
-            f"vesoft/nebula-console:v3 "
+            f"{self._container_image_prefix}vesoft/nebula-console:v3 "
             f"-addr {self.host} -port {self.port} -u root -p nebula -e ':play basketballplayer'"
         )
         try:
@@ -368,7 +393,7 @@ class NebulaGraphLet:
         if shoot:
             self._try_shoot_service("storaged")
 
-        udocker_create_command = "ps | grep storaged || udocker --debug --allow-root create --name=nebula-storaged vesoft/nebula-storaged:v3"
+        udocker_create_command = f"ps | grep storaged || udocker --debug --allow-root create --name=nebula-storaged {self._container_image_prefix}vesoft/nebula-storaged:v3"
         if self._debug:
             fancy_print(
                 "Info: [DEBUG] creating storaged container... with command:"
@@ -405,15 +430,19 @@ class NebulaGraphLet:
         shoot = bool(fresh)
         self.udocker_init()
         # async pull images
-        self.udocker_pull("vesoft/nebula-metad:v3")
-        self.udocker_pull_backgroud("vesoft/nebula-graphd:v3")
+        self.udocker_pull(f"{self._container_image_prefix}vesoft/nebula-metad:v3")
+        self.udocker_pull_backgroud(
+            f"{self._container_image_prefix}vesoft/nebula-graphd:v3"
+        )
         self.start_metad(shoot=shoot)
-        self.udocker_pull_backgroud("vesoft/nebula-storaged:v3")
+        self.udocker_pull_backgroud(
+            f"{self._container_image_prefix}vesoft/nebula-storaged:v3"
+        )
         self.start_graphd()
         self.start_storaged(shoot=shoot)
         time.sleep(10)
         self.activate_storaged()
-        self.udocker_pull("vesoft/nebula-console:v3")
+        self.udocker_pull(f"{self._container_image_prefix}vesoft/nebula-console:v3")
         time.sleep(20)
         fancy_print("Info: loading basketballplayer dataset...")
         self.load_basketballplayer_dataset()
