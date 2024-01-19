@@ -91,7 +91,7 @@ class NebulaGraphLet:
 
         self._container_image_prefix = (
             ""
-            if not self._is_docker_hub_accessible()
+            if self._is_docker_hub_accessible()
             else f"{CN_DOCKER_REGISTRY_MIRROR}/"
         )
 
