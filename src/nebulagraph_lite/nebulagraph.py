@@ -1,4 +1,6 @@
 import os
+import shutil
+import socket
 import subprocess
 import time
 
@@ -14,16 +16,33 @@ from nebulagraph_lite.utils import (
     process_listening_on_port,
 )
 
+from nebula3.gclient.net import ConnectionPool
+from nebula3.Config import Config
+
 LOCALHOST_V4 = "127.0.0.1"
 DEFAULT_GRAPHD_PORT = 9669
 BASE_PATH = os.path.expanduser("~/.nebulagraph/lite")
 COLAB_BASE_PATH = "/content/.nebulagraph/lite"
+MODELSCOPE_BASE_PATH = "/mnt/workspace/.nebulagraph/lite"
 
 # Data set
 BASKETBALLPLAYER_DATASET_URL = "https://raw.githubusercontent.com/vesoft-inc/nebula-console/master/data/basketballplayer.ngql"
+BASKETBALLPLAYER_DATASET_URL_ALT = "https://www.modelscope.cn/api/v1/models/sdfsdfoph1ofdsaofdf/nebulagraph-lite/repo?Revision=master&FilePath=releases/3.6.0/basketballplayer.ngql"
 
 # CN Docker-Registry Mirror
-CN_DOCKER_REGISTRY_MIRROR = "dockerproxy.com"
+CN_DOCKER_REGISTRY_MIRROR = "docker.m.daocloud.io"
+
+# ModelScope Model ID
+MODELSCOPE_MODEL_ID = "sdfsdfoph1ofdsaofdf/nebulagraph-lite"
+MODELSCOPE_MODEL_FILE_PATH = "releases/3.6.0/nebulagraph_lite.tar.gz"
+MODELSCOPE_MODEL_VERSION = "master"
+
+# udocker tarball
+UDOCKER_TARBALL_URL = ""
+UDOCKER_VERSION = "1.2.10"
+UDOCKER_TARBALL_FILENAME = f"udocker-englib-{UDOCKER_VERSION}.tar.gz"
+MODELSCOPE_UDOCKER_TARBALL_FILE_PATH = f"releases/3.6.0/{UDOCKER_VERSION}.tar.gz"
+MODELSCOPE_UDOCKER_VERSION = "master"
 
 
 class NebulaGraphLet:
@@ -35,17 +54,12 @@ class NebulaGraphLet:
         debug=False,
         clean_up=False,
         in_container=False,
+        modelscope=False,
     ):
+        self._debug = debug if debug is not None else False
+
         self.host = host if host is not None else LOCALHOST_V4
         self.port = port if port is not None else DEFAULT_GRAPHD_PORT
-        self.base_path = base_path if base_path is not None else BASE_PATH
-
-        if clean_up:
-            self.clean_up()
-
-        assert (
-            os.path.expanduser("~") in self.base_path
-        ), "Base path must be under current user's home directory"
 
         self.on_ipython = False
         try:
@@ -55,6 +69,23 @@ class NebulaGraphLet:
             self.on_ipython = bool(ipython)
         except:
             pass
+
+        self.base_path = base_path if base_path is not None else BASE_PATH
+        self.on_colab = self._is_running_on_colab()
+        if self.on_colab:
+            self.base_path = COLAB_BASE_PATH
+            if not os.path.exists("/content/"):
+                self.base_path = BASE_PATH
+        self.on_modelscope = modelscope or self._is_on_modelscope()
+        if self.on_modelscope:
+            self.base_path = (
+                base_path if base_path is not None else MODELSCOPE_BASE_PATH
+            )
+            if not os.path.exists("/mnt/workspace/"):
+                self.base_path = BASE_PATH
+
+        if clean_up:
+            self.clean_up()
 
         if self.on_ipython:
             _path = get_ipython().getoutput("which udocker")
@@ -79,21 +110,69 @@ class NebulaGraphLet:
                         "udocker not found. Please install or link it manually to your PATH."
                     )
 
-        self._debug = debug if debug is not None else False
-
-        self.on_colab = self._is_running_on_colab()
-        if self.on_colab:
-            self.base_path = COLAB_BASE_PATH
-
         self.in_container = in_container if in_container is not None else False
 
         self.create_nebulagraph_lite_folders()
 
-        self._container_image_prefix = (
-            ""
-            if self._is_docker_hub_accessible()
-            else f"{CN_DOCKER_REGISTRY_MIRROR}/"
-        )
+        # self._container_image_prefix = (
+        #     ""
+        #     if self._is_docker_hub_accessible()
+        #     else f"{CN_DOCKER_REGISTRY_MIRROR}/"
+        # )
+        # There is no reliable docker registry mirror in China, so we use ModelScope's model registry instead
+        self._container_image_prefix = ""
+
+        # Try download docker image from ModelScope
+        self.modelscope_file = None
+        if self.on_modelscope:
+            self.modelscope_file = self._try_download_modelscope()
+
+    def _is_on_modelscope(self):
+        try:
+            from modelscope.hub.file_download import model_file_download
+        except Exception:
+            return False
+        if self.on_ipython:
+            return True
+        return False
+
+    def _try_download_modelscope(self):
+        try:
+            from modelscope.hub.file_download import model_file_download
+
+            # create cache folder
+            cache_path = f"{self.base_path}/cache"
+            os.makedirs(cache_path, exist_ok=True)
+            os.environ["MODELSCOPE_CACHE"] = cache_path
+
+            # download nebulagraph_lite image tarball
+            model_file = model_file_download(
+                model_id=MODELSCOPE_MODEL_ID,
+                file_path=MODELSCOPE_MODEL_FILE_PATH,
+                revision=MODELSCOPE_MODEL_VERSION,
+                target_path=self.base_path,
+            )
+            # download udocker tarball
+            tarball_file = model_file_download(
+                model_id=MODELSCOPE_MODEL_ID,
+                file_path=MODELSCOPE_UDOCKER_TARBALL_FILE_PATH,
+                revision=MODELSCOPE_UDOCKER_VERSION,
+            )
+            # copy udocker tarball to base_path
+            shutil.copy(
+                tarball_file, self.base_path + "/" + UDOCKER_TARBALL_FILENAME
+            )
+
+            # export UDOCKER_TARBALL={self.base_path}
+            os.environ["UDOCKER_TARBALL"] = self.base_path
+            return model_file
+        except Exception as e:
+            fancy_dict_print(
+                {
+                    "message": "Failed to download nebulagraph_lite model from ModelScope",
+                    "error": e,
+                }
+            )
 
     def _is_docker_hub_accessible(self):
         import urllib.request
@@ -185,11 +264,13 @@ class NebulaGraphLet:
         return result
 
     @retry((Exception,), tries=3, delay=5, backoff=3)
-    def _run_udocker(self, command: str):
+    def _run_udocker(self, command: str, env: str = None):
         if self.on_colab:
             return self._run_udocker_on_colab(command)
         udocker_command_prefix = os.path.join(self._python_bin_path, "udocker")
-        if self.in_container or self.on_ipython:
+        if env:
+            udocker_command_prefix = f"{env} {udocker_command_prefix}"
+        if self.in_container or self.on_ipython or self.on_modelscope:
             udocker_command_prefix = udocker_command_prefix + " --allow-root"
         udocker_command = f"{udocker_command_prefix} {command}"
         result = subprocess.run(
@@ -244,6 +325,8 @@ class NebulaGraphLet:
         )
 
     def udocker_init(self):
+        if self.on_modelscope:
+            self._run_udocker("install", env=f"UDOCKER_TARBALL={self.base_path}")
         self._run_udocker("install")
 
     def udocker_pull(self, image: str):
@@ -284,6 +367,7 @@ class NebulaGraphLet:
 
         # fakechroot is used, see #18
         # TODO: leverage F2 in MUSL/Alpine Linux
+        time.sleep(3)
         udocker_setup_command = "--debug setup --execmode=F1 nebula-metad"
         self._run_udocker(udocker_setup_command)
 
@@ -316,6 +400,14 @@ class NebulaGraphLet:
             )
         self._run_udocker(udocker_create_command)
 
+        # fakechroot is used, see #18
+        # TODO: leverage F2 in MUSL/Alpine Linux
+        time.sleep(3)
+
+        if self.on_modelscope:
+            udocker_setup_command = "--debug setup --execmode=F1 nebula-graphd"
+            self._run_udocker(udocker_setup_command)
+
         udocker_command = (
             f"run --rm --user=root -v "
             f"{self.base_path}/logs/graph:/logs nebula-graphd "
@@ -329,28 +421,75 @@ class NebulaGraphLet:
                 f"\nudocker {udocker_command}"
             )
         self._run_udocker_background(udocker_command)
-        time.sleep(10)
+        time.sleep(15)
         if not self.on_colab:
             # self._run_udocker_ps_filter("graphd")
             process_listening_on_port(self.port)
 
     def activate_storaged(self):
-        udocker_command = (
-            f"run --rm "
-            f"{self._container_image_prefix}vesoft/nebula-console:v3 "
-            f"-addr {self.host} -port {self.port} -u root -p nebula -e 'ADD HOSTS \"{self.host}\":9779'"
-        )
-        self._run_udocker_background(udocker_command)
-        time.sleep(10)
-        udocker_command = (
-            f"run --rm "
-            f"{self._container_image_prefix}vesoft/nebula-console:v3  "
-            f"-addr {self.host} -port {self.port} -u root -p nebula -e 'SHOW HOSTS'"
-        )
-        self._run_udocker_background(udocker_command)
+        # udocker_create_command = f"ps | grep nebula-console || udocker --debug --allow-root create --name=nebula-console {self._container_image_prefix}vesoft/nebula-console:v3"
+        # if self._debug:
+        #     fancy_print(
+        #         "Info: [DEBUG] creating nebula-console container... with command:"
+        #         f"\nudocker {udocker_create_command}"
+        #     )
+        # self._run_udocker(udocker_create_command)
+        # time.sleep(3)
+        # udocker_setup_command = "--debug setup --execmode=F1 nebula-console"
+        # self._run_udocker(udocker_setup_command)
+        # time.sleep(3)
+        # udocker_command = (
+        #     f"run nebula-console "
+        #     f"-addr {self.host} -port {self.port} -u root -p nebula -e 'ADD HOSTS \"{self.host}\":9779'"
+        # )
+        # self._run_udocker_background(udocker_command)
+        # time.sleep(10)
+        # udocker_command = (
+        #     f"run nebula-console  "
+        #     f"-addr {self.host} -port {self.port} -u root -p nebula -e 'SHOW HOSTS'"
+        # )
+        # self._run_udocker_background(udocker_command)
+
+        # leveraging nebula-python to activate storaged instead of nebula-console
+        config = Config()
+        config.max_connection_pool_size = 2
+        connection_pool = ConnectionPool()
+        # Wait for graphd to be ready
+        for _ in range(50):
+            try:
+                connection_pool.init([("127.0.0.1", 9669)], config)
+                break
+            except Exception:
+                time.sleep(1)
+        else:
+            if self._debug:
+                log_content = subprocess.getoutput(
+                    f"tail -n 100 {self.base_path}/logs/*/*"
+                )
+                fancy_print(
+                    "Info: [DEBUG] Last 100 lines of service logs:"
+                    f"\n{log_content}"
+                )
+            raise Exception("graphd did not become ready in 50 seconds")
+        with connection_pool.session_context("root", "nebula") as session:
+            session.execute(f'ADD HOSTS "{self.host}":9779')
+            result = session.execute("SHOW TAGS")
+            fancy_dict_print({"SHOW TAGS": result})
 
     def load_basketballplayer_dataset(self):
+        # udocker_create_command = f"ps | grep nebula-console || udocker --debug --allow-root create --name=nebula-console {self._container_image_prefix}vesoft/nebula-console:v3"
+        # if self._debug:
+        #     fancy_print(
+        #         "Info: [DEBUG] creating nebula-console container... with command:"
+        #         f"\nudocker {udocker_create_command}"
+        #     )
+        # self._run_udocker(udocker_create_command)
+        # time.sleep(3)
+        # udocker_setup_command = "--debug setup --execmode=F1 nebula-console"
+        # self._run_udocker(udocker_setup_command)
+
         url = BASKETBALLPLAYER_DATASET_URL
+        socket.setdefaulttimeout(5)
         try:
             urlretrieve(url, f"{self.base_path}/data_set/basketballplayer.ngql")
         except Exception as e:
@@ -361,33 +500,65 @@ class NebulaGraphLet:
                     "url": url,
                 }
             )
-            raise Exception(
-                f"Failed to download basketballplayer dataset from {url}"
-            )
+            socket.setdefaulttimeout(10)
+            url = BASKETBALLPLAYER_DATASET_URL_ALT
+            try:
+                urlretrieve(url, f"{self.base_path}/data_set/basketballplayer.ngql")
+            except Exception as e:
+                fancy_dict_print(
+                    {
+                        "message": "Failed to download basketballplayer dataset from alternative URL, please check your network connection",
+                        "error": str(e),
+                        "url": url,
+                    }
+                )
+                raise Exception(
+                    f"Failed to download basketballplayer dataset from {url}"
+                )
 
-        udocker_command = (
-            f"run --rm -v {self.base_path}/data_set:/root/data "
-            f"{self._container_image_prefix}vesoft/nebula-console:v3 "
-            f"-addr {self.host} -port {self.port} -u root -p nebula -e ':play basketballplayer'"
-        )
-        try:
-            time.sleep(10)
-            self._run_udocker(udocker_command)
-        except Exception as e:
-            fancy_dict_print(
-                {
-                    "message": "Failed to load basketballplayer dataset, probably because the graphd is not ready yet or the cluster is not healthy, try cleaning up the base path and start again",
-                    "error": str(e),
-                    "udocker_command": udocker_command,
-                }
-            )
-            fancy_dict_print(
-                {
-                    "Info:": "Failed to load basketballplayer dataset, probably because the graphd is not ready yet or the cluster is not healthy, try this later from the console manually",
-                    "command": f"udocker {udocker_command}",
-                    "error": str(e),
-                }
-            )
+        # udocker_command = (
+        #     f"run --rm -v {self.base_path}/data_set:/root/data "
+        #     f"nebula-console "
+        #     f"-addr {self.host} -port {self.port} -u root -p nebula -e ':play basketballplayer'"
+        # )
+        # try:
+        #     time.sleep(10)
+        #     self._run_udocker(udocker_command)
+        # except Exception as e:
+        #     fancy_dict_print(
+        #         {
+        #             "message": "Failed to load basketballplayer dataset, probably because the graphd is not ready yet or the cluster is not healthy, try cleaning up the base path and start again",
+        #             "error": str(e),
+        #             "udocker_command": udocker_command,
+        #         }
+        #     )
+        #     fancy_dict_print(
+        #         {
+        #             "Info:": "Failed to load basketballplayer dataset, probably because the graphd is not ready yet or the cluster is not healthy, try this later from the console manually",
+        #             "command": f"udocker {udocker_command}",
+        #             "error": str(e),
+        #         }
+        #     )
+
+        # leveraging nebula-python to load basketballplayer dataset instead of nebula-console
+        config = Config()
+        config.max_connection_pool_size = 2
+        connection_pool = ConnectionPool()
+        connection_pool.init([("127.0.0.1", 9669)], config)
+        with connection_pool.session_context("root", "nebula") as session:
+            with open(
+                f"{self.base_path}/data_set/basketballplayer.ngql", "r"
+            ) as file:
+                ngql_commands = file.read().split("\n")
+                for command in ngql_commands:
+                    if "partition_num=10" in command:
+                        command = command.replace(
+                            "partition_num=10", "partition_num=1"
+                        )
+                    if command.strip() and not command.startswith(":"):
+                        session.execute(command)
+                    elif command.startswith(":sleep"):
+                        time.sleep(int(command.split(" ")[1]))
 
     def start_storaged(self, shoot=False):
         if shoot:
@@ -403,6 +574,7 @@ class NebulaGraphLet:
 
         # fakechroot is used, see #18
         # TODO: leverage F2 in MUSL/Alpine Linux
+        time.sleep(3)
         udocker_setup_command = "--debug setup --execmode=F1 nebula-storaged"
         self._run_udocker(udocker_setup_command)
 
@@ -429,20 +601,51 @@ class NebulaGraphLet:
     def start(self, fresh=False):
         shoot = bool(fresh)
         self.udocker_init()
+        # if on_modelscope, we should load the model first
+        if self.on_modelscope:
+            fancy_print(
+                f"Info: loading nebulagraph_lite model from {self.modelscope_file}..."
+            )
+            os.system(f"tar -xzf {self.modelscope_file} -C {self.base_path}")
+
+            try:
+                self._run_udocker(
+                    f"load -i {self.base_path}/nebulagraph_lite_meta.tar"
+                )
+                self._run_udocker(
+                    f"load -i {self.base_path}/nebulagraph_lite_graph.tar"
+                )
+                self._run_udocker(
+                    f"load -i {self.base_path}/nebulagraph_lite_storage.tar"
+                )
+                self._run_udocker(
+                    f"load -i {self.base_path}/nebulagraph_lite_console.tar"
+                )
+            except Exception as e:
+                if self._debug:
+                    fancy_print(f"Info: [DEBUG] error when load model, {e}")
+            fancy_print(f"Info: nebulagraph_lite model loaded successfully!")
         # async pull images
-        self.udocker_pull(f"{self._container_image_prefix}vesoft/nebula-metad:v3")
-        self.udocker_pull_backgroud(
-            f"{self._container_image_prefix}vesoft/nebula-graphd:v3"
-        )
+        if not self.on_modelscope:
+            self.udocker_pull(
+                f"{self._container_image_prefix}vesoft/nebula-metad:v3"
+            )
+            self.udocker_pull_backgroud(
+                f"{self._container_image_prefix}vesoft/nebula-graphd:v3"
+            )
         self.start_metad(shoot=shoot)
-        self.udocker_pull_backgroud(
-            f"{self._container_image_prefix}vesoft/nebula-storaged:v3"
-        )
+        if not self.on_modelscope:
+            self.udocker_pull_backgroud(
+                f"{self._container_image_prefix}vesoft/nebula-storaged:v3"
+            )
         self.start_graphd()
         self.start_storaged(shoot=shoot)
-        time.sleep(10)
+        time.sleep(20)
         self.activate_storaged()
-        self.udocker_pull(f"{self._container_image_prefix}vesoft/nebula-console:v3")
+        if not self.on_modelscope:
+            self.udocker_pull(
+                f"{self._container_image_prefix}vesoft/nebula-console:v3"
+            )
         time.sleep(20)
         fancy_print("Info: loading basketballplayer dataset...")
         self.load_basketballplayer_dataset()

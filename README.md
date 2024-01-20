@@ -3,9 +3,10 @@
   <h1 style="margin-left:110px;">NebulaGraph Lite</h1>
 </div>
 
-Try NebulaGraph with `pip install`, on Linux/ WSL2 or even [Google Colab](https://bit.ly/nebula-colab), in container, rootless.
+Try NebulaGraph with `pip install`, on Linux/ WSL2 or even [Google Colab](https://bit.ly/nebula-colab) or [ModelScope Notebook](https://modelscope.cn/my/mynotebook/preset), in container, rootless.
 
 [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://bit.ly/nebula-colab)
+[![ModelScope](https://img.shields.io/badge/ModelScope-Notebook-blue)](https://modelscope.cn/my/mynotebook/preset)
 [![Jupyter](https://img.shields.io/badge/Jupyter-Supported-brightgreen)](https://github.com/jupyterlab/jupyterlab)
 [![for NebulaGraph](https://img.shields.io/badge/Toolchain-NebulaGraph-blue)](https://github.com/vesoft-inc/nebula)
 [![pdm-managed](https://img.shields.io/badge/pdm-managed-blueviolet)](https://pdm.fming.dev)
