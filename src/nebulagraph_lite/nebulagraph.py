@@ -56,6 +56,8 @@ class NebulaGraphLet:
         in_container=False,
         modelscope=False,
     ):
+        self._debug = debug if debug is not None else False
+
         self.host = host if host is not None else LOCALHOST_V4
         self.port = port if port is not None else DEFAULT_GRAPHD_PORT
 
@@ -107,8 +109,6 @@ class NebulaGraphLet:
                     raise Exception(
                         "udocker not found. Please install or link it manually to your PATH."
                     )
-
-        self._debug = debug if debug is not None else False
 
         self.in_container = in_container if in_container is not None else False
 
