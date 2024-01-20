@@ -102,7 +102,9 @@ class NebulaGraphLet:
             self.base_path = COLAB_BASE_PATH
         self.on_modelscope = modelscope or self._is_on_modelscope()
         if self.on_modelscope:
-            self.base_path = base_path if base_path is not None else MODELSCOPE_BASE_PATH
+            self.base_path = (
+                base_path if base_path is not None else MODELSCOPE_BASE_PATH
+            )
 
         self.in_container = in_container if in_container is not None else False
 
