@@ -72,6 +72,59 @@ jobs:
     - name: Run NebulaGraph-Lite in container
       run: nebulagraph --debug --container start
 
+  e2e-jupyter-notebook:
+    runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        image: ["ubuntu:20.04"]
+    container:
+      image: ${{ matrix.image }}
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Install Dependencies
+      run: |
+        if grep -qEi "debian|buntu" /etc/*release; then
+          apt-get update && apt-get install python3-pip curl -y
+        else
+          yum update -y && yum install python3-pip which -y
+        fi
+    - name: Install NebulaGraph-Lite
+      run: pip3 install .
+
+    - name: Run Jupyter e2e test
+      run: |
+        pip3 install notebook nbconvert
+        jupyter nbconvert --to notebook --execute tests/e2e/jupyter/jupyter_test.ipynb
+
+  e2e-modelscope-notebook:
+    runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        image: ["ubuntu:20.04"]
+    container:
+      image: ${{ matrix.image }}
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Install Dependencies
+      run: |
+        if grep -qEi "debian|buntu" /etc/*release; then
+          apt-get update && apt-get install python3-pip curl -y
+        else
+          yum update -y && yum install python3-pip which -y
+        fi
+    - name: Install NebulaGraph-Lite
+      run: pip3 install .
+
+    - name: Run Jupyter e2e test
+      run: |
+        pip3 install notebook nbconvert
+        jupyter nbconvert --to notebook --execute tests/e2e/jupyter/modelscope_test.ipynb
+
+
   # e2e-alpine:
   #   runs-on: ubuntu-22.04
   #   strategy:

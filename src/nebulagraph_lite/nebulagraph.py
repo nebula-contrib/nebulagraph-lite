@@ -54,6 +54,7 @@ class NebulaGraphLet:
         debug=False,
         clean_up=False,
         in_container=False,
+        modelscope=False,
     ):
         self.host = host if host is not None else LOCALHOST_V4
         self.port = port if port is not None else DEFAULT_GRAPHD_PORT
@@ -103,7 +104,7 @@ class NebulaGraphLet:
         self.on_colab = self._is_running_on_colab()
         if self.on_colab:
             self.base_path = COLAB_BASE_PATH
-        self.on_modelscope = self._is_on_modelscope()
+        self.on_modelscope = modelscope or self._is_on_modelscope()
         if self.on_modelscope:
             self.base_path = MODELSCOPE_BASE_PATH
 
