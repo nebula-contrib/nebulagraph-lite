@@ -61,6 +61,15 @@ class NebulaGraphLet:
         self.host = host if host is not None else LOCALHOST_V4
         self.port = port if port is not None else DEFAULT_GRAPHD_PORT
 
+        self.on_ipython = False
+        try:
+            from IPython import get_ipython
+
+            ipython = get_ipython()
+            self.on_ipython = bool(ipython)
+        except:
+            pass
+
         self.base_path = base_path if base_path is not None else BASE_PATH
         self.on_colab = self._is_running_on_colab()
         if self.on_colab:
@@ -77,15 +86,6 @@ class NebulaGraphLet:
 
         if clean_up:
             self.clean_up()
-
-        self.on_ipython = False
-        try:
-            from IPython import get_ipython
-
-            ipython = get_ipython()
-            self.on_ipython = bool(ipython)
-        except:
-            pass
 
         if self.on_ipython:
             _path = get_ipython().getoutput("which udocker")
