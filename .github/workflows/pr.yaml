@@ -121,7 +121,7 @@ jobs:
 
     - name: Run Jupyter e2e test
       run: |
-        pip3 install notebook nbconvert
+        pip3 install notebook nbconvert modelscope
         jupyter nbconvert --to notebook --execute tests/e2e/jupyter/modelscope_test.ipynb
 
 
