@@ -58,7 +58,20 @@ class NebulaGraphLet:
     ):
         self.host = host if host is not None else LOCALHOST_V4
         self.port = port if port is not None else DEFAULT_GRAPHD_PORT
+
         self.base_path = base_path if base_path is not None else BASE_PATH
+        self.on_colab = self._is_running_on_colab()
+        if self.on_colab:
+            self.base_path = COLAB_BASE_PATH
+            if not os.path.exists("/content/"):
+                self.base_path = BASE_PATH
+        self.on_modelscope = modelscope or self._is_on_modelscope()
+        if self.on_modelscope:
+            self.base_path = (
+                base_path if base_path is not None else MODELSCOPE_BASE_PATH
+            )
+            if not os.path.exists("/mnt/workspace/"):
+                self.base_path = BASE_PATH
 
         if clean_up:
             self.clean_up()
@@ -96,15 +109,6 @@ class NebulaGraphLet:
                     )
 
         self._debug = debug if debug is not None else False
-
-        self.on_colab = self._is_running_on_colab()
-        if self.on_colab:
-            self.base_path = COLAB_BASE_PATH
-        self.on_modelscope = modelscope or self._is_on_modelscope()
-        if self.on_modelscope:
-            self.base_path = (
-                base_path if base_path is not None else MODELSCOPE_BASE_PATH
-            )
 
         self.in_container = in_container if in_container is not None else False
 
