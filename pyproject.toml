@@ -23,7 +23,8 @@ source = "file"
 path = "src/nebulagraph_lite/__init__.py"
 
 [tool.pdm]
-package-type = "application"
+
+distribution = "false"
 
 [tool.pdm.dev-dependencies]
 

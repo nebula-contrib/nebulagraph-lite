@@ -395,8 +395,10 @@ class NebulaGraphLet:
         # fakechroot is used, see #18
         # TODO: leverage F2 in MUSL/Alpine Linux
         time.sleep(3)
-        udocker_setup_command = "--debug setup --execmode=F1 nebula-graphd"
-        self._run_udocker(udocker_setup_command)
+
+        if self.on_modelscope:
+            udocker_setup_command = "--debug setup --execmode=F1 nebula-graphd"
+            self._run_udocker(udocker_setup_command)
 
         udocker_command = (
             f"run --rm --user=root -v "
@@ -452,6 +454,14 @@ class NebulaGraphLet:
             except Exception:
                 time.sleep(1)
         else:
+            if self._debug:
+                log_content = subprocess.getoutput(
+                    f"tail -n 100 {self.base_path}/logs/*/*"
+                )
+                fancy_print(
+                    "Info: [DEBUG] Last 100 lines of service logs:"
+                    f"\n{log_content}"
+                )
             raise Exception("graphd did not become ready in 50 seconds")
         with connection_pool.session_context("root", "nebula") as session:
             session.execute(f'ADD HOSTS "{self.host}":9779')

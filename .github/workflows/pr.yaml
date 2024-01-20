@@ -116,10 +116,11 @@ jobs:
         else
           yum update -y && yum install python3-pip which -y
         fi
+
     - name: Install NebulaGraph-Lite
       run: pip3 install .
 
-    - name: Run Jupyter e2e test
+    - name: Run ModelScope e2e test
       run: |
         pip3 install notebook nbconvert modelscope
         jupyter nbconvert --to notebook --execute tests/e2e/jupyter/modelscope_test.ipynb
