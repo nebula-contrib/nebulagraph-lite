@@ -411,7 +411,7 @@ class NebulaGraphLet:
                 f"\nudocker {udocker_command}"
             )
         self._run_udocker_background(udocker_command)
-        time.sleep(10)
+        time.sleep(15)
         if not self.on_colab:
             # self._run_udocker_ps_filter("graphd")
             process_listening_on_port(self.port)
@@ -614,7 +614,7 @@ class NebulaGraphLet:
             )
         self.start_graphd()
         self.start_storaged(shoot=shoot)
-        time.sleep(10)
+        time.sleep(20)
         self.activate_storaged()
         if not self.on_modelscope:
             self.udocker_pull(
