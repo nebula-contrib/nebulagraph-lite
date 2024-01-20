@@ -63,10 +63,6 @@ class NebulaGraphLet:
         if clean_up:
             self.clean_up()
 
-        assert (
-            os.path.expanduser("~") in self.base_path
-        ), "Base path must be under current user's home directory"
-
         self.on_ipython = False
         try:
             from IPython import get_ipython
