@@ -140,11 +140,17 @@ class NebulaGraphLet:
         try:
             from modelscope.hub.file_download import model_file_download
 
+            # create cache folder
+            cache_path = f"{self.base_path}/cache"
+            os.makedirs(cache_path, exist_ok=True)
+            os.environ["MODELSCOPE_CACHE"] = cache_path
+
             # download nebulagraph_lite image tarball
             model_file = model_file_download(
                 model_id=MODELSCOPE_MODEL_ID,
                 file_path=MODELSCOPE_MODEL_FILE_PATH,
                 revision=MODELSCOPE_MODEL_VERSION,
+                target_path=self.base_path,
             )
             # download udocker tarball
             tarball_file = model_file_download(
