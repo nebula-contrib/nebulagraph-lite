@@ -264,7 +264,7 @@ class NebulaGraphLet:
         udocker_command_prefix = os.path.join(self._python_bin_path, "udocker")
         if env:
             udocker_command_prefix = f"{env} {udocker_command_prefix}"
-        if self.in_container or self.on_ipython:
+        if self.in_container or self.on_ipython or self.on_modelscope:
             udocker_command_prefix = udocker_command_prefix + " --allow-root"
         udocker_command = f"{udocker_command_prefix} {command}"
         result = subprocess.run(
