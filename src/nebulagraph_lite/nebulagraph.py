@@ -444,7 +444,15 @@ class NebulaGraphLet:
         config = Config()
         config.max_connection_pool_size = 2
         connection_pool = ConnectionPool()
-        connection_pool.init([("127.0.0.1", 9669)], config)
+        # Wait for graphd to be ready
+        for _ in range(50):
+            try:
+                connection_pool.init([("127.0.0.1", 9669)], config)
+                break
+            except Exception:
+                time.sleep(1)
+        else:
+            raise Exception("graphd did not become ready in 50 seconds")
         with connection_pool.session_context("root", "nebula") as session:
             session.execute(f'ADD HOSTS "{self.host}":9779')
             result = session.execute("SHOW TAGS")
