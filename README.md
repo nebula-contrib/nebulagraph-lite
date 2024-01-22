@@ -60,6 +60,20 @@ nebulagraph start
 
 Voilà! It'ts up and running already now!
 
+
+## Free NebulaGraph Playground in 5 minutes
+
+> Thanks to [Google Colab](https://colab.research.google.com/) and [ModelScope Notebook](https://modelscope.cn/my/mynotebook/preset), we could have a free NebulaGraph playground in 5 minutes.
+
+Go with 👉 [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://bit.ly/nebula-colab).
+
+<details>
+  <summary>In China?</summary>
+
+Go with 👉 [![Open in ModelScope](https://img.shields.io/badge/ModelScope-Notebook-blue?logo=jupyter)](https://github.com/wey-gu/nebulagraph-lite/blob/main/examples/NebulaGraph_Lite.ipynb)
+
+</details>
+
 ## What's next
 
 Play with `nebula3-python` or [ipython-ngql](https://github.com/wey-gu/ipython-ngql) and walk through the [Documentation](https://docs.nebula-graph.io/)!
