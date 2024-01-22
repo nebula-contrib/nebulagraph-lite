@@ -6,8 +6,8 @@
 Try NebulaGraph with `pip install`, on Linux/ WSL2 or even [Google Colab](https://bit.ly/nebula-colab) or [ModelScope Notebook](https://modelscope.cn/my/mynotebook/preset), in container, rootless.
 
 [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://bit.ly/nebula-colab)
-[![ModelScope](https://img.shields.io/badge/ModelScope-Notebook-blue?logo=jupyter)](https://modelscope.cn/my/mynotebook/preset)
-[![Jupyter](https://img.shields.io/badge/Jupyter-Supported-brightgreen?logo=jupyter)](https://github.com/jupyterlab/jupyterlab)
+[![ModelScope](https://img.shields.io/badge/ModelScope-Notebook-blue?logo=jupyter)](https://github.com/wey-gu/nebulagraph-lite/blob/main/examples/NebulaGraph_Lite.ipynb)
+[![Jupyter](https://img.shields.io/badge/Jupyter-Supported-brightgreen?logo=jupyter)](https://github.com/wey-gu/nebulagraph-lite/blob/main/examples/NebulaGraph_Lite.ipynb)
 [![for NebulaGraph](https://img.shields.io/badge/Toolchain-NebulaGraph-blue)](https://github.com/vesoft-inc/nebula)
 [![pdm-managed](https://img.shields.io/badge/pdm-managed-blueviolet)](https://pdm.fming.dev)
 
