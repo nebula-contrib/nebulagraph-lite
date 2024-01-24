@@ -5,7 +5,7 @@
 groups = ["default", "jupyter", "client", "dev"]
 strategy = ["cross_platform", "inherit_metadata"]
 lock_version = "4.4.1"
-content_hash = "sha256:0ed2e544e95a3e061bb8bc55382c20568c6571acbc0c694559b4e15a8a759e16"
+content_hash = "sha256:bb85d8aa017dc72a8ab4b7743b076ccb98c86840d7d7b50a9ee5dc41c0106cfc"
 
 [[package]]
 name = "appnope"
@@ -257,7 +257,8 @@ files = [
 
 [[package]]
 name = "nebula3-python"
-version = "3.4.0"
+version = "3.5.0"
+requires_python = ">=3.6.2"
 summary = "Python client for NebulaGraph V3.4"
 groups = ["default"]
 dependencies = [
@@ -267,8 +268,8 @@ dependencies = [
     "six>=1.16.0",
 ]
 files = [
-    {file = "nebula3-python-3.4.0.tar.gz", hash = "sha256:47bd8b1b4bb2c2f0e5122bc147926cb50578a66841acf6a743cae4d0362c9eaa"},
-    {file = "nebula3_python-3.4.0-py3-none-any.whl", hash = "sha256:d9d94c6a41712875e6ec866907de0789057f860e64f547f87d9f199439759dd6"},
+    {file = "nebula3_python-3.5.0-py3-none-any.whl", hash = "sha256:c98c3ad4c243a7a46f55d044826a801408dffe36739bbcc7af078bed311c401a"},
+    {file = "nebula3_python-3.5.0.tar.gz", hash = "sha256:ea079a7101584de3c1d9104a4c2ae36f6c6f154314df274d7753b03ebd2f467e"},
 ]
 
 [[package]]
