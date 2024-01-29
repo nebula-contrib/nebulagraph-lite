@@ -1,22 +1,22 @@
 <div>
-  <img src="https://github.com/wey-gu/nebulagraph-lite/assets/1651790/97b5dccb-bca1-4141-b426-03bcb3761a10" alt="NebulaGraph-Lite-logo" height="100" style="float:left;">
+  <img src="https://github.com/nebula-contrib/nebulagraph-lite/assets/1651790/97b5dccb-bca1-4141-b426-03bcb3761a10" alt="NebulaGraph-Lite-logo" height="100" style="float:left;">
   <h1 style="margin-left:110px;">NebulaGraph Lite</h1>
 </div>
 
 Try NebulaGraph with `pip install`, on Linux/ WSL2 or even [Google Colab](https://bit.ly/nebula-colab) or [ModelScope Notebook](https://modelscope.cn/my/mynotebook/preset), in container, rootless.
 
 [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://bit.ly/nebula-colab)
-[![ModelScope](https://img.shields.io/badge/ModelScope-Notebook-blue?logo=jupyter)](https://github.com/wey-gu/nebulagraph-lite/blob/main/examples/NebulaGraph_Lite.ipynb)
-[![Jupyter](https://img.shields.io/badge/Jupyter-Supported-brightgreen?logo=jupyter)](https://github.com/wey-gu/nebulagraph-lite/blob/main/examples/NebulaGraph_Lite.ipynb)
+[![ModelScope](https://img.shields.io/badge/ModelScope-Notebook-blue?logo=jupyter)](https://github.com/nebula-contrib/nebulagraph-lite/blob/main/examples/NebulaGraph_Lite.ipynb)
+[![Jupyter](https://img.shields.io/badge/Jupyter-Supported-brightgreen?logo=jupyter)](https://github.com/nebula-contrib/nebulagraph-lite/blob/main/examples/NebulaGraph_Lite.ipynb)
 [![for NebulaGraph](https://img.shields.io/badge/Toolchain-NebulaGraph-blue)](https://github.com/vesoft-inc/nebula)
 [![pdm-managed](https://img.shields.io/badge/pdm-managed-blueviolet)](https://pdm.fming.dev)
 
 
-[![GitHub release (latest by date)](https://img.shields.io/github/v/release/wey-gu/nebulagraph-lite?label=release)](https://github.com/wey-gu/nebulagraph-lite/releases)
+[![GitHub release (latest by date)](https://img.shields.io/github/v/release/nebula-contrib/nebulagraph-lite?label=release)](https://github.com/nebula-contrib/nebulagraph-lite/releases)
 [![pypi-version](https://img.shields.io/pypi/v/nebulagraph-lite)](https://pypi.org/project/nebulagraph-lite/)
 [![python-version](https://img.shields.io/badge/python-3.8%20|%203.9%20|%203.10%20|%203.11%20|%203.12-blue)](https://www.python.org/)
 
-[![Build Checks](https://github.com/wey-gu/nebulagraph-lite/actions/workflows/release.yaml/badge.svg)](https://github.com/wey-gu/nebulagraph-lite/actions/workflows/release.yaml)
+[![Build Checks](https://github.com/nebula-contrib/nebulagraph-lite/actions/workflows/release.yaml/badge.svg)](https://github.com/nebula-contrib/nebulagraph-lite/actions/workflows/release.yaml)
 
 ## How to use
 
@@ -70,13 +70,13 @@ Go with 👉 [![Open in Colab](https://colab.research.google.com/assets/colab-ba
 <details>
   <summary>In China?</summary>
 
-Go with 👉 [![Open in ModelScope](https://img.shields.io/badge/ModelScope-Notebook-blue?logo=jupyter)](https://github.com/wey-gu/nebulagraph-lite/blob/main/examples/NebulaGraph_Lite.ipynb)
+Go with 👉 [![Open in ModelScope](https://img.shields.io/badge/ModelScope-Notebook-blue?logo=jupyter)](https://github.com/nebula-contrib/nebulagraph-lite/blob/main/examples/NebulaGraph_Lite.ipynb)
 
 </details>
 
 ## What's next
 
-Play with `nebula3-python` or [ipython-ngql](https://github.com/wey-gu/ipython-ngql) and walk through the [Documentation](https://docs.nebula-graph.io/)!
+Play with `nebula3-python` or [ipython-ngql](https://github.com/nebula-contrib/ipython-ngql) and walk through the [Documentation](https://docs.nebula-graph.io/)!
 
 ```bash
 pip3 install ipython-ngql
@@ -108,9 +108,9 @@ Intrested in other play or production options?
 ### Play and Dev
 
 - [Docker Compose](https://github.com/vesoft-inc/nebula-docker-compose), if you are comfortable to play with Docker on single server.
-- [nebula-up](https://github.com/wey-gu/nebula-up), one-liner test env installer on single server, support studio, dashboard, nebulagraph algorithm, exchange etc, all-in-one.
+- [nebula-up](https://github.com/nebula-contrib/nebula-up), one-liner test env installer on single server, support studio, dashboard, nebulagraph algorithm, exchange etc, all-in-one.
 - [Docker Extension](https://github.com/nebula-contrib/nebulagraph-docker-ext), one-click on Docker Desktop(macOS, windows) on desktop machines, in GUI flavor.
-- [Nebula-Operator-KinD](https://github.com/wey-gu/nebula-operator-kind), Nebula K8s Operator with K8s-in-Docker, one-liner test env with docker+k8s+nebulagrpah-operator, try NebulaGraph on K8s with ease on your single server.
+- [Nebula-Operator-KinD](https://github.com/nebula-contrib/nebula-operator-kind), Nebula K8s Operator with K8s-in-Docker, one-liner test env with docker+k8s+nebulagrpah-operator, try NebulaGraph on K8s with ease on your single server.
 
 ## Acknowledgements
 
@@ -122,12 +122,12 @@ Intrested in other play or production options?
 
 ## Supported Platforms
 
-[![Ubuntu ✔](https://img.shields.io/badge/Ubuntu-✔-green?logo=ubuntu)](https://github.com/wey-gu/nebulagraph-lite)
+[![Ubuntu ✔](https://img.shields.io/badge/Ubuntu-✔-green?logo=ubuntu)](https://github.com/nebula-contrib/nebulagraph-lite)
 [![Google Colab ✔](https://img.shields.io/badge/Google%20Colab-✔-green?logo=googlecolab)](https://bit.ly/nebula-colab)
-[![ModelScope Notebook ✔](https://img.shields.io/badge/ModelScope%20Notebook-✔-green?logo=jupyter)](https://github.com/wey-gu/nebulagraph-lite/blob/main/examples/NebulaGraph_Lite.ipynb)
-[![RockyLinux ✔](https://img.shields.io/badge/RockyLinux-✔-green?logo=rockylinux)](https://github.com/wey-gu/nebulagraph-lite)
-[![Nested**Container** ✔](https://img.shields.io/badge/NestedContainer-✔-green?logo=docker)](https://github.com/wey-gu/nebulagraph-lite)
-[![WSL2 ✔](https://img.shields.io/badge/WSL2-✔-green?logo=windows)](https://github.com/wey-gu/nebulagraph-lite)
+[![ModelScope Notebook ✔](https://img.shields.io/badge/ModelScope%20Notebook-✔-green?logo=jupyter)](https://github.com/nebula-contrib/nebulagraph-lite/blob/main/examples/NebulaGraph_Lite.ipynb)
+[![RockyLinux ✔](https://img.shields.io/badge/RockyLinux-✔-green?logo=rockylinux)](https://github.com/nebula-contrib/nebulagraph-lite)
+[![Nested**Container** ✔](https://img.shields.io/badge/NestedContainer-✔-green?logo=docker)](https://github.com/nebula-contrib/nebulagraph-lite)
+[![WSL2 ✔](https://img.shields.io/badge/WSL2-✔-green?logo=windows)](https://github.com/nebula-contrib/nebulagraph-lite)
 
 ## FAQ
 
