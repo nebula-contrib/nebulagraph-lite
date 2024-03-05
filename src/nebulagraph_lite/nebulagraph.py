@@ -150,7 +150,6 @@ class NebulaGraphLet:
                 model_id=MODELSCOPE_MODEL_ID,
                 file_path=MODELSCOPE_MODEL_FILE_PATH,
                 revision=MODELSCOPE_MODEL_VERSION,
-                target_path=self.base_path,
             )
             # download udocker tarball
             tarball_file = model_file_download(
