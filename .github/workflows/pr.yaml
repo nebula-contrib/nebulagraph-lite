@@ -100,34 +100,32 @@ jobs:
         pip3 install notebook nbconvert
         jupyter nbconvert --to notebook --execute tests/e2e/jupyter/jupyter_test.ipynb
 
-  # I give up on this one, it's too hard to get it working to emulate the modelscope environment...
-  #
-  # e2e-modelscope-notebook:
-  #   runs-on: ubuntu-22.04
-  #   strategy:
-  #     matrix:
-  #       image: ["ubuntu:20.04"]
-  #   container:
-  #     image: ${{ matrix.image }}
-  #   steps:
-  #   - name: Checkout code
-  #     uses: actions/checkout@v3
+  e2e-modelscope-notebook:
+    runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        image: ["ubuntu:20.04"]
+    container:
+      image: ${{ matrix.image }}
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
 
-  #   - name: Install Dependencies
-  #     run: |
-  #       if grep -qEi "debian|buntu" /etc/*release; then
-  #         apt-get update && apt-get install python3-pip curl -y
-  #       else
-  #         yum update -y && yum install python3-pip which -y
-  #       fi
+    - name: Install Dependencies
+      run: |
+        if grep -qEi "debian|buntu" /etc/*release; then
+          apt-get update && apt-get install python3-pip curl -y
+        else
+          yum update -y && yum install python3-pip which -y
+        fi
 
-  #   - name: Install NebulaGraph-Lite
-  #     run: pip3 install .
+    - name: Install NebulaGraph-Lite
+      run: pip3 install .
 
-  #   - name: Run ModelScope e2e test
-  #     run: |
-  #       pip3 install notebook nbconvert modelscope
-  #       jupyter nbconvert --to notebook --execute tests/e2e/jupyter/modelscope_test.ipynb
+    - name: Run ModelScope e2e test
+      run: |
+        pip3 install notebook nbconvert modelscope
+        jupyter nbconvert --to notebook --execute tests/e2e/jupyter/modelscope_test.ipynb
 
 
   # e2e-alpine:
