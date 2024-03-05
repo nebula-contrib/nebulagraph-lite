@@ -164,7 +164,7 @@ class NebulaGraphLet:
             )
 
             # export UDOCKER_TARBALL={self.base_path}
-            os.environ["UDOCKER_TARBALL"] = self.base_path
+            os.environ["UDOCKER_TARBALL"] = f"{self.base_path}/{UDOCKER_TARBALL_FILENAME}"
             return model_file
         except Exception as e:
             fancy_dict_print(
@@ -326,7 +326,7 @@ class NebulaGraphLet:
 
     def udocker_init(self):
         if self.on_modelscope:
-            self._run_udocker("install", env=f"UDOCKER_TARBALL={self.base_path}")
+            self._run_udocker("install", env=f"UDOCKER_TARBALL={self.base_path}/{UDOCKER_TARBALL_FILENAME}")
         else:
             self._run_udocker("install")
 
