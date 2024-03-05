@@ -39,7 +39,8 @@ MODELSCOPE_MODEL_VERSION = "master"
 
 # udocker tarball
 UDOCKER_TARBALL_URL = ""
-UDOCKER_VERSION = "1.2.10"
+# udocker tool version
+UDOCKER_VERSION = "1.2.11"
 UDOCKER_TARBALL_FILENAME = f"udocker-englib-{UDOCKER_VERSION}.tar.gz"
 MODELSCOPE_UDOCKER_TARBALL_FILE_PATH = f"releases/3.6.0/{UDOCKER_VERSION}.tar.gz"
 MODELSCOPE_UDOCKER_VERSION = "master"
@@ -150,7 +151,6 @@ class NebulaGraphLet:
                 model_id=MODELSCOPE_MODEL_ID,
                 file_path=MODELSCOPE_MODEL_FILE_PATH,
                 revision=MODELSCOPE_MODEL_VERSION,
-                target_path=self.base_path,
             )
             # download udocker tarball
             tarball_file = model_file_download(
@@ -164,7 +164,9 @@ class NebulaGraphLet:
             )
 
             # export UDOCKER_TARBALL={self.base_path}
-            os.environ["UDOCKER_TARBALL"] = self.base_path
+            os.environ["UDOCKER_TARBALL"] = (
+                f"{self.base_path}/{UDOCKER_TARBALL_FILENAME}"
+            )
             return model_file
         except Exception as e:
             fancy_dict_print(
@@ -326,8 +328,12 @@ class NebulaGraphLet:
 
     def udocker_init(self):
         if self.on_modelscope:
-            self._run_udocker("install", env=f"UDOCKER_TARBALL={self.base_path}")
-        self._run_udocker("install")
+            self._run_udocker(
+                "install",
+                env=f"UDOCKER_TARBALL={self.base_path}/{UDOCKER_TARBALL_FILENAME}",
+            )
+        else:
+            self._run_udocker("install")
 
     def udocker_pull(self, image: str):
         self._run_udocker(f"pull {image}")
