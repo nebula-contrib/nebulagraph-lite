@@ -3,9 +3,9 @@
   <h1 style="margin-left:110px;">NebulaGraph Lite</h1>
 </div>
 
-Try NebulaGraph with `pip install`, on Linux/ WSL2 or even [Google Colab](https://bit.ly/nebula-colab) or [ModelScope Notebook](https://modelscope.cn/my/mynotebook/preset), in container, rootless.
+Try NebulaGraph with `pip install`, on Linux/ WSL2 or even [Google Colab](https://colab.research.google.com/github/nebula-contrib/nebulagraph-lite/blob/main/examples/NebulaGraph_Lite.ipynb) or [ModelScope Notebook](https://modelscope.cn/my/mynotebook/preset), in container, rootless.
 
-[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://bit.ly/nebula-colab)
+[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/nebula-contrib/nebulagraph-lite/blob/main/examples/NebulaGraph_Lite.ipynb)
 [![ModelScope](https://img.shields.io/badge/ModelScope-Notebook-blue?logo=jupyter)](https://github.com/nebula-contrib/nebulagraph-lite/blob/main/examples/NebulaGraph_Lite.ipynb)
 [![Jupyter](https://img.shields.io/badge/Jupyter-Supported-brightgreen?logo=jupyter)](https://github.com/nebula-contrib/nebulagraph-lite/blob/main/examples/NebulaGraph_Lite.ipynb)
 [![for NebulaGraph](https://img.shields.io/badge/Toolchain-NebulaGraph-blue)](https://github.com/vesoft-inc/nebula)
@@ -65,7 +65,7 @@ Voilà! It'ts up and running already now!
 
 > Thanks to [Google Colab](https://colab.research.google.com/) and [ModelScope Notebook](https://modelscope.cn/my/mynotebook/preset), we could have a free NebulaGraph playground in 5 minutes.
 
-Go with 👉 [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://bit.ly/nebula-colab).
+Go with 👉 [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/nebula-contrib/nebulagraph-lite/blob/main/examples/NebulaGraph_Lite.ipynb).
 
 <details>
   <summary>In China?</summary>
@@ -123,7 +123,7 @@ Intrested in other play or production options?
 ## Supported Platforms
 
 [![Ubuntu ✔](https://img.shields.io/badge/Ubuntu-✔-green?logo=ubuntu)](https://github.com/nebula-contrib/nebulagraph-lite)
-[![Google Colab ✔](https://img.shields.io/badge/Google%20Colab-✔-green?logo=googlecolab)](https://bit.ly/nebula-colab)
+[![Google Colab ✔](https://img.shields.io/badge/Google%20Colab-✔-green?logo=googlecolab)](https://colab.research.google.com/github/nebula-contrib/nebulagraph-lite/blob/main/examples/NebulaGraph_Lite.ipynb)
 [![ModelScope Notebook ✔](https://img.shields.io/badge/ModelScope%20Notebook-✔-green?logo=jupyter)](https://github.com/nebula-contrib/nebulagraph-lite/blob/main/examples/NebulaGraph_Lite.ipynb)
 [![RockyLinux ✔](https://img.shields.io/badge/RockyLinux-✔-green?logo=rockylinux)](https://github.com/nebula-contrib/nebulagraph-lite)
 [![Nested**Container** ✔](https://img.shields.io/badge/NestedContainer-✔-green?logo=docker)](https://github.com/nebula-contrib/nebulagraph-lite)
