@@ -1,0 +1,31 @@
+# fly.toml app configuration file for nebulagraph-lite
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = 'nebulagraph-lite'
+primary_region = 'hkg'
+
+[build]
+
+
+[[services]]
+  protocol = 'tcp'
+  internal_port = 9669
+  internal_address = "0.0.0.0"
+
+[[services.ports]]
+  handlers = ["proxy_proto"]
+  port = 9669
+  proxy_proto_options = { version = "v2" }
+
+  [[services.tcp_checks]]
+    grace_period = "60s"
+    interval = "30s"
+    restart_limit = 0
+    timeout = "2s"
+
+[[vm]]
+  memory = '1gb'
+  cpu_kind = 'shared'
+  cpus = 1

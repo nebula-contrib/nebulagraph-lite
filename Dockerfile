@@ -10,7 +10,7 @@ RUN apt-get update && apt-get install -y curl which && \
     nebulagraph --container stop
 
 # Expose port 9559, 9669, 9779 for NebulaGraph
-EXPOSE 9559 9669 9779
+EXPOSE 9669 9559 9779
 
 # Start NebulaGraph
 CMD ["nebulagraph", "--container", "start"]
