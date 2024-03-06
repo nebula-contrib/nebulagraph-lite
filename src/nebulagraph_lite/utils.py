@@ -9,7 +9,7 @@ from typing import List, Type
 # Thanks to https://www.learnui.design/tools/data-color-picker.html
 COLORS_hex = {
     # "dark_blue": "#003f5c",
-    # "blue": "#2f4b7c",
+    "blue": "#2f4b7c",
     "purple": "#665191",
     "magenta": "#a05195",
     "pink": "#d45087",
@@ -20,7 +20,7 @@ COLORS_hex = {
 
 COLORS_rgb = {
     # "dark_blue": "38;2;0;63;92",
-    # "blue": "38;2;47;75;124",
+    "blue": "38;2;47;75;124",
     "purple": "38;2;102;81;145",
     "magenta": "38;2;160;81;149",
     "pink": "38;2;212;80;135",
@@ -75,7 +75,7 @@ def retry(
     return decorator
 
 
-def fancy_print(text: str, color: str = "Blue") -> None:
+def fancy_print(text: str, color: str = "random") -> None:
     """
     Print a string in color from COLORS_rgb.
     """
