@@ -11,13 +11,12 @@ Try NebulaGraph with `pip install`, on Linux/ WSL2 or even [Google Colab](https:
 [![for NebulaGraph](https://img.shields.io/badge/Toolchain-NebulaGraph-blue)](https://github.com/vesoft-inc/nebula)
 [![pdm-managed](https://img.shields.io/badge/pdm-managed-blueviolet)](https://pdm.fming.dev)
 
+
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/nebula-contrib/nebulagraph-lite?label=release)](https://github.com/nebula-contrib/nebulagraph-lite/releases)
 [![pypi-version](https://img.shields.io/pypi/v/nebulagraph-lite)](https://pypi.org/project/nebulagraph-lite/)
 [![python-version](https://img.shields.io/badge/python-3.8%20|%203.9%20|%203.10%20|%203.11%20|%203.12-blue)](https://www.python.org/)
 
 [![Build Checks](https://github.com/nebula-contrib/nebulagraph-lite/actions/workflows/release.yaml/badge.svg)](https://github.com/nebula-contrib/nebulagraph-lite/actions/workflows/release.yaml)
-
-[![Deploy to Fly.io](https://img.shields.io/badge/Deploy%20to-Fly.io-3981DE.svg)](https://fly.io/new?template=https://github.com/nebula-contrib/nebulagraph-lite)
 
 ## How to use
 
