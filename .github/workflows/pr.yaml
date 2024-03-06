@@ -5,6 +5,10 @@ on:
       - main
     paths-ignore:
       - 'README.md'
+      - 'examples/**'
+      - 'Dockerfile'
+      - 'tools/**'
+      - 'design/**'
   workflow_call:
 
 jobs:
