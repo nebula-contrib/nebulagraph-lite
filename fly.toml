@@ -1,0 +1,23 @@
+app = "nebulagraph-lite"
+
+# The "kill_signal" and "kill_timeout" are optional and can be adjusted as needed
+kill_signal = "SIGINT"  # The signal Fly.io will send to your app to stop it
+kill_timeout = 5  # How long Fly.io will wait before forcibly killing your app (in seconds)
+
+[[services]]
+  internal_port = 9669
+  protocol = "tcp"
+
+  [services.concurrency]
+    hard_limit = 25  # Maximum number of concurrent connections to your app
+    soft_limit = 20  # Number of connections at which Fly.io will start queuing requests
+
+  [[services.ports]]
+    port = 9669
+    handlers = ["tcp"]
+
+  [[services.tcp_checks]]
+    grace_period = "5s"  # How long to wait after the container starts before the first health check
+    interval = "15s"  # How often to run this health check
+    timeout = "2s"  # How long to wait for a response before considering the check failed
+    restart_limit = 0  # How many times to restart the app on failure before giving up
