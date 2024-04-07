@@ -76,10 +76,10 @@ Go with 👉 [![Open in ModelScope](https://img.shields.io/badge/ModelScope-Note
 
 ## What's next
 
-Play with `nebula3-python` or [ipython-ngql](https://github.com/nebula-contrib/ipython-ngql) and walk through the [Documentation](https://docs.nebula-graph.io/)!
+Play with `nebula3-python` or [jupyter-nebulagraph](https://jupyter-nebulagraph.readthedocs.io) and walk through the [Documentation](https://docs.nebula-graph.io/)!
 
 ```bash
-pip3 install ipython-ngql
+pip3 install jupyter-nebulagraph
 %load_ext ngql
 ```
 
