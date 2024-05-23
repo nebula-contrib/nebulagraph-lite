@@ -70,7 +70,7 @@ jobs:
         if grep -qEi "debian|buntu" /etc/*release; then
           apt-get update && apt-get install python3-pip curl python3-venv -y
         else
-          yum update -y && yum install python3-pip which python3-virtualenv -y
+          dnf update -y && dnf install python3 python3-pip which -y
         fi
 
     - name: Setup virtual environment
