@@ -68,15 +68,25 @@ jobs:
     - name: Install Dependencies
       run: |
         if grep -qEi "debian|buntu" /etc/*release; then
-          apt-get update && apt-get install python3-pip curl -y
+          apt-get update && apt-get install python3-pip curl python3-venv -y
         else
-          yum update -y && yum install python3-pip which -y
+          dnf update -y && dnf install python3 python3-pip which -y
         fi
+
+    - name: Setup virtual environment
+      run: |
+        python3 -m venv venv
+        . venv/bin/activate
+
     - name: Install NebulaGraph-Lite
-      run: pip3 install .
+      run: |
+        . venv/bin/activate
+        pip3 install .
 
     - name: Run NebulaGraph-Lite in container
-      run: nebulagraph --debug --container start
+      run: |
+        . venv/bin/activate
+        nebulagraph --debug --container start
 
   e2e-jupyter-notebook:
     runs-on: ubuntu-22.04
@@ -92,15 +102,24 @@ jobs:
     - name: Install Dependencies
       run: |
         if grep -qEi "debian|buntu" /etc/*release; then
-          apt-get update && apt-get install python3-pip curl -y
+          apt-get update && apt-get install python3-pip curl python3-venv -y
         else
-          yum update -y && yum install python3-pip which -y
+          yum update -y && yum install python3-pip which python3-virtualenv -y
         fi
+
+    - name: Setup virtual environment
+      run: |
+        python3 -m venv venv
+        . venv/bin/activate
+
     - name: Install NebulaGraph-Lite
-      run: pip3 install .
+      run: |
+        . venv/bin/activate
+        pip3 install .
 
     - name: Run Jupyter e2e test
       run: |
+        . venv/bin/activate
         pip3 install notebook nbconvert
         jupyter nbconvert --to notebook --execute tests/e2e/jupyter/jupyter_test.ipynb
 
@@ -118,16 +137,24 @@ jobs:
     - name: Install Dependencies
       run: |
         if grep -qEi "debian|buntu" /etc/*release; then
-          apt-get update && apt-get install python3-pip curl -y
+          apt-get update && apt-get install python3-pip curl python3-venv -y
         else
-          yum update -y && yum install python3-pip which -y
+          yum update -y && yum install python3-pip which python3-virtualenv -y
         fi
 
+    - name: Setup virtual environment
+      run: |
+        python3 -m venv venv
+        . venv/bin/activate
+
     - name: Install NebulaGraph-Lite
-      run: pip3 install .
+      run: |
+        . venv/bin/activate
+        pip3 install .
 
     - name: Run ModelScope e2e test
       run: |
+        . venv/bin/activate
         pip3 install notebook nbconvert modelscope
         jupyter nbconvert --to notebook --execute tests/e2e/jupyter/modelscope_test.ipynb
 
