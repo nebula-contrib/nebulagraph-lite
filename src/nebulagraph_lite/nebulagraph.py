@@ -164,9 +164,9 @@ class NebulaGraphLet:
             )
 
             # export UDOCKER_TARBALL={self.base_path}
-            os.environ[
-                "UDOCKER_TARBALL"
-            ] = f"{self.base_path}/{UDOCKER_TARBALL_FILENAME}"
+            os.environ["UDOCKER_TARBALL"] = (
+                f"{self.base_path}/{UDOCKER_TARBALL_FILENAME}"
+            )
             return model_file
         except Exception as e:
             fancy_dict_print(
