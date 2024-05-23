@@ -5,7 +5,7 @@
 
 ```bash
 git clone https://sdfsdfoph1ofdsaofdf@www.modelscope.cn/sdfsdfoph1ofdsaofdf/nebulagraph-lite.git
-cd nebulagraph-lite/releases/3.6.0
+cd nebulagraph-lite/releases/3.8.0
 docker save -o nebulagraph_lite_meta.tar vesoft/nebula-metad:v3
 docker save -o nebulagraph_lite_storage.tar vesoft/nebula-storaged:v3
 docker save -o nebulagraph_lite_graph.tar vesoft/nebula-graphd:v3
@@ -34,7 +34,7 @@ sudo apt-get install git-lfs -y
 git lfs install
 git lfs track "*.tar.gz"
 
-git add releases/3.6.0/*.tar.gz
+git add releases/3.8.0/*.tar.gz
 git add releases/3.6.0/*.ngql
 
 git commit -m "add artifacts"

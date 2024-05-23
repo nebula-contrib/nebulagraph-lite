@@ -2,4 +2,4 @@ from nebulagraph_lite.nebulagraph import NebulaGraphLet as nebulagraph_let
 
 __all__ = ["nebulagraph_let"]
 
-__version__ = "0.2.2"
+__version__ = "0.2.3"

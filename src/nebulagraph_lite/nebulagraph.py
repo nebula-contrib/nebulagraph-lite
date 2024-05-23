@@ -34,7 +34,7 @@ CN_DOCKER_REGISTRY_MIRROR = "docker.m.daocloud.io"
 
 # ModelScope Model ID
 MODELSCOPE_MODEL_ID = "sdfsdfoph1ofdsaofdf/nebulagraph-lite"
-MODELSCOPE_MODEL_FILE_PATH = "releases/3.6.0/nebulagraph_lite.tar.gz"
+MODELSCOPE_MODEL_FILE_PATH = "releases/3.8.0/nebulagraph_lite.tar.gz"
 MODELSCOPE_MODEL_VERSION = "master"
 
 # udocker tarball
@@ -164,9 +164,9 @@ class NebulaGraphLet:
             )
 
             # export UDOCKER_TARBALL={self.base_path}
-            os.environ["UDOCKER_TARBALL"] = (
-                f"{self.base_path}/{UDOCKER_TARBALL_FILENAME}"
-            )
+            os.environ[
+                "UDOCKER_TARBALL"
+            ] = f"{self.base_path}/{UDOCKER_TARBALL_FILENAME}"
             return model_file
         except Exception as e:
             fancy_dict_print(
