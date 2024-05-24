@@ -32,8 +32,8 @@ jobs:
     - name: Build and Install NebulaGraph-Lite
       run: pip3 install .
     
-    - name: Dry run `nebulagraph start`
-      run: nebulagraph --debug start --cleanup
+    - name: Dry run `nebulagraph start`, in case of error, will run with debug mode
+      run: nebulagraph start --cleanup || nebulagraph --debug start --cleanup
 
   # error: Could not open the file: /sys/fs/cgroup/memory.max, seems cgroup version detection failed here
   # let's skip this test for now
