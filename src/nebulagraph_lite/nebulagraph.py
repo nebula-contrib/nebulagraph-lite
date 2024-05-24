@@ -613,7 +613,8 @@ class NebulaGraphLet:
         # if on_modelscope, we should load the model first
         if self.on_modelscope:
             fancy_print(
-                f"Info: loading nebulagraph_lite model from {self.modelscope_file}..."
+                f"Info: loading nebulagraph_lite model from {self.modelscope_file}...",
+                color="light_green",
             )
             os.system(f"tar -xzf {self.modelscope_file} -C {self.base_path}")
 
@@ -633,7 +634,10 @@ class NebulaGraphLet:
             except Exception as e:
                 if self._debug:
                     fancy_print(f"Info: [DEBUG] error when load model, {e}")
-            fancy_print(f"Info: nebulagraph_lite model loaded successfully!")
+            fancy_print(
+                f"Info: nebulagraph_lite model loaded successfully!",
+                color="light_blue",
+            )
         # async pull images
         if not self.on_modelscope:
             self.udocker_pull(
@@ -656,10 +660,12 @@ class NebulaGraphLet:
                 f"{self._container_image_prefix}vesoft/nebula-console:v3"
             )
         time.sleep(20)
-        fancy_print("Info: loading basketballplayer dataset...")
+        fancy_print("Info: loading basketballplayer dataset...", color="green")
         self.load_basketballplayer_dataset()
         fancy_print(BANNER_ASCII)
-        fancy_print("[ OK ] nebulagraph_lite started successfully!", "purple")
+        fancy_print(
+            "[ OK ] nebulagraph_lite started successfully!", color="light_purple"
+        )
         self.docker_ps()
 
     def check_status(self):
