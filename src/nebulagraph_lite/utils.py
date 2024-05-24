@@ -16,6 +16,14 @@ COLORS_hex = {
     "red": "#f95d6a",
     "orange": "#ff7c43",
     "yellow": "#ffa600",
+    "green": "#a8ff9f",
+    "light_green": "#baf278",
+    "light_blue": "#78caff",
+    "light_purple": "#d2a6ff",
+    "light_pink": "#ff94d2",
+    "light_red": "#ff79c6",
+    "light_orange": "#ffb47b",
+    "light_yellow": "#ffe8a1",
 }
 
 COLORS_rgb = {
@@ -27,6 +35,14 @@ COLORS_rgb = {
     "red": "38;2;249;93;106",
     "orange": "38;2;255;124;67",
     "yellow": "38;2;255;166;0",
+    "green": "38;2;168;255;159",
+    "light_green": "38;2;186;252;78",
+    "light_blue": "38;2;120;198;255",
+    "light_purple": "38;2;210;161;255",
+    "light_pink": "38;2;255;148;181",
+    "light_red": "38;2;255;129;159",
+    "light_orange": "38;2;255;186;119",
+    "light_yellow": "38;2;255;239;0",
 }
 
 BANNER_ASCII = r"""
