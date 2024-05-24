@@ -105,17 +105,36 @@ def fancy_print(text: str, color: str = "random") -> None:
     print(f"\033[1;3;{color}m{text}\033[0m")
 
 
-def fancy_dict_print(d: dict, color: str = None) -> None:
+def fancy_dict_print(d: dict, color: str = None, indent: int = 0) -> None:
     """
-    Print a dict in color from COLORS_rgb.
+    Recursively print a dict in color from COLORS_rgb, supporting nested dictionaries and lists.
     """
     color_keys = list(COLORS_rgb.keys())
+    indent_space = " " * indent
     for i, (key, value) in enumerate(d.items()):
         if color is None or color not in COLORS_rgb:
-            color = COLORS_rgb[color_keys[i % len(color_keys)]]
+            selected_color = COLORS_rgb[color_keys[i % len(color_keys)]]
         else:
-            color = COLORS_rgb[color]
-        print(f"\033[1;3;{color}m{key}: {value}\033[0m")
+            selected_color = COLORS_rgb[color]
+        if isinstance(value, dict):
+            print(f"\033[1;3;{selected_color}m{indent_space}{key}:\033[0m")
+            fancy_dict_print(value, color, indent + 4)
+        elif isinstance(value, list):
+            print(f"\033[1;3;{selected_color}m{indent_space}{key}:\033[0m")
+            if not all(isinstance(item, (dict, list)) for item in value):
+                print(
+                    f"\033[1;3;{selected_color}m{indent_space}    {', '.join(map(str, value))}\033[0m"
+                )
+            else:
+                for item in value:
+                    if isinstance(item, dict):
+                        fancy_dict_print(item, color, indent + 4)
+                    else:
+                        print(
+                            f"\033[1;3;{selected_color}m{indent_space}    {item}\033[0m"
+                        )
+        else:
+            print(f"\033[1;3;{selected_color}m{indent_space}{key}: {value}\033[0m")
 
 
 def get_pid_by_port(port):
