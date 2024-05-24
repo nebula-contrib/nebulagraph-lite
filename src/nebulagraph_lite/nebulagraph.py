@@ -482,8 +482,8 @@ class NebulaGraphLet:
             raise Exception("graphd did not become ready in 50 seconds")
         with connection_pool.session_context("root", "nebula") as session:
             session.execute(f'ADD HOSTS "{self.host}":9779')
-            result = session.execute("SHOW TAGS")
-            fancy_dict_print({"SHOW TAGS": result})
+            result = session.execute_json("SHOW HOSTS")
+            fancy_dict_print({"SHOW HOSTS": result})
 
     def load_basketballplayer_dataset(self):
         # udocker_create_command = f"ps | grep nebula-console || udocker --debug --allow-root create --name=nebula-console {self._container_image_prefix}vesoft/nebula-console:v3"
